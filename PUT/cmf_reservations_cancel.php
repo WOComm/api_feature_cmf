@@ -45,7 +45,7 @@ Flight::route('PUT /cmf/reservations/cancel', function()
 		"method"=>"GET",
 		"request"=>"cmf/properties/ids",
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 			
 	$response = json_decode($call_self->call($elements));
@@ -53,7 +53,7 @@ Flight::route('PUT /cmf/reservations/cancel', function()
 	if ( !isset($response->data->response) || empty($response->data->response) ) { // Critical error
 		Flight::halt(204, "Cannot determine manager's properties.");
 	}
-		
+
 	// We will collect the manager's property uids to ensure that the client can book them all
 	$manager_property_uids = array();
 	foreach ($response->data->response as $property) {

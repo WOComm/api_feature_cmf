@@ -37,7 +37,7 @@ Flight::route('PUT /cmf/property/unpublish', function()
 		"method"=>"GET",
 		"request"=>"cmf/property/status/".$property_uid,
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 			
 	$property_status = json_decode($call_self->call($elements));

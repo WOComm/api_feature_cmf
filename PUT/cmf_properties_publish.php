@@ -33,11 +33,11 @@ Flight::route('PUT /cmf/properties/publish', function()
 		"method"=>"GET",
 		"request"=>"cmf/properties/statuses",
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
 	$properties_statuses = json_decode($call_self->call($elements));
-	
+
 	$responses = array();
 	if ( isset($properties_statuses->data->response) && !empty($properties_statuses->data->response) ) {
 		foreach ($properties_statuses->data->response as $property) {

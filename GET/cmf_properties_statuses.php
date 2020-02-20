@@ -31,7 +31,7 @@ Flight::route('GET /cmf/properties/statuses', function()
 		"method"=>"GET",
 		"request"=>"cmf/list/property/statuses/",
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
 	$property_statuses_texts = json_decode($call_self->call($elements));

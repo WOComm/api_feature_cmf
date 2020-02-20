@@ -46,7 +46,7 @@ Flight::route('GET /cmf/channel/announce/@channel_name', function($channel_name)
 	}
 	
 	$channel_name = filter_var($channel_name, FILTER_SANITIZE_SPECIAL_CHARS);
-	
+
 	$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_channels WHERE `cms_user_id` =".(int)Flight::get('user_id')." AND `channel_name` = '".$channel_name."' LIMIT 1";
 	$id = doSelectSql($query , 1 );
 	

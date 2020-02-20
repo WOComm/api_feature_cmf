@@ -48,7 +48,7 @@ Flight::route('PUT /cmf/property/availability', function()
 		"method"=>"GET",
 		"request"=>"cmf/property/list/blackbookings/".$property_uid,
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 			
 	$response = json_decode($call_self->call($elements));
@@ -136,7 +136,7 @@ Flight::route('PUT /cmf/property/availability', function()
 						"method"=>"DELETE",
 						"request"=>"cmf/property/blackbooking/".$property_uid."/".$refactor['contract_uid_to_cancel'] ,
 						"data"=>array(),
-						"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+						"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 						);
 			
 					$deleted_blackbooking_response = json_decode($call_self->call($elements));
@@ -155,7 +155,7 @@ Flight::route('PUT /cmf/property/availability', function()
 								"method"=>"PUT",
 								"request"=>"cmf/property/blackbooking/",
 								"data"=>array( "property_uid" => $property_uid , "availability" => $availability , "room_ids" => '[]' , "remote_booking_id" => '' ),
-								"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+								"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 								);
 				
 							$black_booking_responses[] = json_decode($call_self->call($elements));
@@ -206,7 +206,7 @@ Flight::route('PUT /cmf/property/availability', function()
 							"method"=>"PUT",
 							"request"=>"cmf/property/blackbooking/",
 							"data"=>array( "property_uid" => $property_uid , "availability" => $availability , "room_ids" => '[]' , "remote_booking_id" => '' ),
-							"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+							"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 							);
 							
 						$black_booking_responses[] = json_decode($call_self->call($elements)); 

@@ -40,11 +40,11 @@ Flight::route('PUT /cmf/property/publish', function()
 		"method"=>"GET",
 		"request"=>"cmf/property/status/".$property_uid,
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 			
 	$property_status = json_decode($call_self->call($elements));
-			
+
 	$response = false;
 	if ( $property_status->data->response->status_code == "2" ) {
 		$jomres_properties = jomres_singleton_abstract::getInstance('jomres_properties');

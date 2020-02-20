@@ -54,7 +54,7 @@ Flight::route('PUT /cmf/property/cleaningfee', function()
 		"method"=>"GET",
 		"request"=>"cmf/property/list/extras/".$property_uid,
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
 	$response = json_decode($call_self->call($elements));
@@ -66,7 +66,7 @@ Flight::route('PUT /cmf/property/cleaningfee', function()
 					"method"=>"DELETE",
 					"request"=>"cmf/property/extra/".$property_uid."/".$extra->id,
 					"data"=>array(),
-					"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+					"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 					);
 				
 				$response = json_decode($call_self->call($elements));
@@ -82,7 +82,7 @@ Flight::route('PUT /cmf/property/cleaningfee', function()
 		"method"=>"GET",
 		"request"=>"cmf/list/tax/rates",
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
 	$response = json_decode($call_self->call($elements));
@@ -127,7 +127,7 @@ Flight::route('PUT /cmf/property/cleaningfee', function()
 			'model_params'					=> $model_params,
 			'model_force'					=> $model_force
 			),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
 	$response = json_decode($call_self->call($elements));

@@ -51,7 +51,7 @@ Flight::route('PUT /cmf/reservations/add', function()
 		"method"=>"GET",
 		"request"=>"cmf/properties/ids",
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 			
 	$response = json_decode($call_self->call($elements));

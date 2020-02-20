@@ -29,7 +29,7 @@ class cmf_utilities
 	public static function validate_admin_for_user()
 	{
 
-		if ( Flight::get('user_id') !== '99999999999999' ) {
+		if ( Flight::get('scopes') != array("*") ) {
 			if (empty($result)) {
 				Flight::halt(204, "Invalid API Client for accessing Admin endpoints");
 			}
@@ -76,8 +76,8 @@ class cmf_utilities
 
 		$result = doSelectSql($query , 1 );
 
-		if ( empty($result) || count($result) == 0 ) {
-			Flight::halt(204, "User does not have access to the channel ".$channel_name);
+		if ( empty($result) || is_null($result) ) {
+			Flight::halt(204, "User does not have access to this channel ".$channel_name);
 		}
 
 		Flight::set('channel_header' , 'X-JOMRES-channel-name' );
@@ -278,7 +278,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/cleaningfee/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
 			$response = json_decode($call_self->call($elements));
@@ -294,7 +294,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/securitydeposit/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
 			$response = json_decode($call_self->call($elements));
@@ -586,7 +586,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/securitydeposit/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
 			$response = json_decode($call_self->call($elements));
@@ -609,7 +609,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/cleaningfee/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 					
 			$response = json_decode($call_self->call($elements));
@@ -631,7 +631,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/deposit/type/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
 			$response = json_decode($call_self->call($elements));
@@ -707,7 +707,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/list/booking/statuses/",
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
 			$booking_statuses = json_decode($call_self->call($elements));
@@ -1017,7 +1017,7 @@ class cmf_utilities
 			"method"=>"GET",
 			"request"=>"cmf/property/available/rooms/".$booking->property_uid."/".$booking->date_from."/".$booking->date_to,
 			"data"=>array(),
-			"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+			"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 			);
 				
 		$response = json_decode($call_self->call($elements));
@@ -1097,7 +1097,7 @@ class cmf_utilities
 								"remote_booking_id" => $booking->remote_reservation_id,
 								"local_booking_id" => $contract_uid
 								),
-							"headers" => array ( Flight::get('channel_header' )." : ".Flight::get('channel_name') )
+							"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 							);
 
 						$link_response = json_decode($call_self->call($elements));
