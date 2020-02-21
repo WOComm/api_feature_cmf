@@ -40,7 +40,7 @@ Flight::route('POST /cmf/dictionary/items/map/@remote_type/@local_type', functio
 		$data_object[$tmp->remote_item_id] = $tmp ;
 	}
 
-	$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_mapping WHERE `type` = '".(string)$local_type."' AND `channel_name` = '".(int) Flight::get('channel_name')."' LIMIT 1";
+	$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_mapping WHERE `type` = '".(string)$local_type."' AND `channel_name` = '".Flight::get('channel_name')."' LIMIT 1";
 	$result = doSelectSql($query , 2 );
 
 	if (empty($result)) {
