@@ -752,8 +752,13 @@ class cmf_utilities
 				}
 			}
 		}
-			
-		$guest_numbers['nuber_of_guests'] = $guest_numbers['adults'] + $guest_numbers['children'] ;
+
+		if ( $guest_numbers['adults'] > 0 || $guest_numbers['children'] ) {
+            $guest_numbers['number_of_guests'] = $guest_numbers['adults'] + $guest_numbers['children'] ;
+        } else {
+            $guest_numbers['number_of_guests'] = 2;
+        }
+
 		
 		$booking_status = 1;
 		if ( $contract->noshow_flag == "0" && $contract->cancelled == "0" ) {
