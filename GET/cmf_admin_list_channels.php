@@ -23,22 +23,24 @@ Flight::route('GET /cmf/admin/list/channels', function()
     require_once("../framework.php");
 
 	cmf_utilities::validate_admin_for_user();
-	
-	$call_self = new call_self( );
-	$elements = array(
-		"method"=>"GET",
-		"request"=>"cmf/admin/list/managers/",
-		"data"=>array()
+
+	$jomres_users = jomres_singleton_abstract::getInstance('jomres_users');
+	$jomres_users->get_users();
+
+	$managers = array();
+	foreach ($jomres_users->users as $user) {
+		$id = (int)$user['cms_user_id'];
+		$managers[$id] = array (
+			"id"					=> (int)$user['id'] ,
+			"cms_user_id"			=> $id ,
+			"username"				=> $user['username'] ,
+			"access_level"			=> (int)$user['access_level'] ,
+			"suspended"				=> (bool)$user['suspended'] ,
+			"authorised_properties"	=> $user['authorised_properties']
 		);
-			
-	$response = json_decode($call_self->call($elements));
-	
-	if (empty($response->data->response)) {
-		Flight::halt(204, "No managers in system.");
 	}
 	
-	$managers = (array)$response->data->response;
-	
+
 	$property_managers = array();
 	foreach ($managers as $manager) {
 		$manager = (array)$manager;
