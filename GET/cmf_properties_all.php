@@ -29,14 +29,19 @@ Flight::route('GET /cmf/properties/all', function()
 	$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
 	$thisJRUser->init_user(Flight::get('user_id'));
 
-	$response = array();
+	$properties = array();
 	if (!empty($thisJRUser->authorisedProperties)) {
-		foreach ( $thisJRUser->authorisedProperties as $r ) {
-			$response[] = $r ;
+		$current_property_details = jomres_singleton_abstract::getInstance( 'basic_property_details' );
+		$property_names = $current_property_details->get_property_name_multi($thisJRUser->authorisedProperties);
+
+		if (!empty($property_names)) {
+			foreach ($property_names as $property_uid => $property_name ) {
+				$properties[] = array ( "property_id" => $property_uid , "property_name" => str_replace('&#39;' , "'", $property_name) ) ;
+			}
 		}
 	}
 
-	Flight::json( $response_name = "response" , $response ); 
+	Flight::json( $response_name = "response" , $properties );
 	});
 	
 	
