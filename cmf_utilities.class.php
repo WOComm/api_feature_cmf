@@ -103,8 +103,33 @@ class cmf_utilities
 			Flight::halt(204, "Manager does not have access to this property, or the property does not exist");
 		}
 	}
-	
-	
+
+	/**
+	 *
+	 * Confirm that the manager has readonly access to this property
+	 *
+	 * Intended for when the calling script is jomres2jomres, we validate that the property uid exists in the authorisedproperties variable, and if so then we allow the user to see this information
+	 *
+	 */
+	public static function validate_property_is_in_managers_authorised_properties_list( $property_uid = 0 )
+	{
+		if ($property_uid == 0 ) {
+			Flight::halt(204, "Property uid not passed");
+		}
+
+		$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
+		$thisJRUser->init_user(Flight::get('user_id'));
+
+		if (!empty($thisJRUser->authorisedProperties)) {
+			if (!in_array($property_uid, $thisJRUser->authorisedProperties) ) {
+				Flight::halt(204, "Manager not authorised to view property");
+			}
+		} else {
+			Flight::halt(204, "Manager has no properties");
+		}
+	}
+
+
 	/**
 	*
 	* Get cache contents and exit
