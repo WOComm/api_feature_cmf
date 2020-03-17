@@ -276,11 +276,11 @@ class cmf_utilities
 		$jomres_properties->property_othertransport			= $current_property_details->multi_query_result[$property_uid]['property_othertransport'];
 		$jomres_properties->property_policies_disclaimers	= $current_property_details->multi_query_result[$property_uid]['property_policies_disclaimers'];
 
-		$jomres_properties->room_info['rooms']			= $current_property_details->multi_query_result[$property_uid]['rooms'];
-		$jomres_properties->room_info['rooms_by_type']			= $current_property_details->multi_query_result[$property_uid]['rooms_by_type'];
+		$jomres_properties->room_info['rooms']				= $current_property_details->multi_query_result[$property_uid]['rooms'];
+		$jomres_properties->room_info['rooms_by_type']		= $current_property_details->multi_query_result[$property_uid]['rooms_by_type'];
 		$jomres_properties->room_info['room_types']			= $current_property_details->multi_query_result[$property_uid]['room_types'];
+		$jomres_properties->room_info['rooms_max_people']	= $current_property_details->multi_query_result[$property_uid]['rooms_max_people'];
 
-		
 		$query = "SELECT  `params` FROM #__jomres_channelmanagement_framework_rooms_xref WHERE `property_uid` = ".$property_uid." AND `channel_id` = ".Flight::get('channel_id')." LIMIT 1";
 		$existing_rooms = doSelectSql( $query , 2 );
 		if (isset($existing_rooms['params'])) {
