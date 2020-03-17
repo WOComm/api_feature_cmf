@@ -32,11 +32,20 @@ Flight::route('GET /cmf/properties/all', function()
 	$properties = array();
 	if (!empty($thisJRUser->authorisedProperties)) {
 		$current_property_details = jomres_singleton_abstract::getInstance( 'basic_property_details' );
-		$property_names = $current_property_details->get_property_name_multi($thisJRUser->authorisedProperties);
+		//$property_names = $current_property_details->get_property_name_multi($thisJRUser->authorisedProperties);
+		$all_properties = $current_property_details->gather_data_multi($thisJRUser->authorisedProperties);
 
-		if (!empty($property_names)) {
-			foreach ($property_names as $property_uid => $property_name ) {
-				$properties[] = array ( "property_id" => $property_uid , "property_name" => str_replace('&#39;' , "'", $property_name) ) ;
+		if (!empty($all_properties)) {
+			foreach ($all_properties as $property_uid => $property ) {
+
+				$properties[] = array (
+					"property_id" => $property_uid ,
+					"property_name" => str_replace('&#39;' , "'", $property['property_name']),
+					"property_town" => str_replace('&#39;' , "'", $property['property_town']),
+					"property_region" => str_replace('&#39;' , "'", $property['property_region']),
+					"property_country" => str_replace('&#39;' , "'", $property['property_country']),
+					"property_type_title" => str_replace('&#39;' , "'", $property['property_type_title']),
+				) ;
 			}
 		}
 	}
