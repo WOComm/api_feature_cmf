@@ -13,9 +13,11 @@ defined( '_JOMRES_INITCHECK' ) or die( '' );
 // ################################################################
 
 /*
-
-Return the items for a given property type (e.g. property types) that currently exist in the system
-
+*
+* Return the property details of a property that exists in the system that belongs to the manager but is not owned by this channel
+*
+* Primarily for use by jomres2jomres and other systems that want to export properties from one system to another. The scope remains Channel Management
+*
 */
 
 Flight::route('GET /cmf/property/readonly/@id', function( $property_uid )

@@ -275,6 +275,11 @@ class cmf_utilities
 		$jomres_properties->property_airports				= $current_property_details->multi_query_result[$property_uid]['property_airports'];
 		$jomres_properties->property_othertransport			= $current_property_details->multi_query_result[$property_uid]['property_othertransport'];
 		$jomres_properties->property_policies_disclaimers	= $current_property_details->multi_query_result[$property_uid]['property_policies_disclaimers'];
+
+		$jomres_properties->room_info['rooms']			= $current_property_details->multi_query_result[$property_uid]['rooms'];
+		$jomres_properties->room_info['rooms_by_type']			= $current_property_details->multi_query_result[$property_uid]['rooms_by_type'];
+		$jomres_properties->room_info['room_types']			= $current_property_details->multi_query_result[$property_uid]['room_types'];
+
 		
 		$query = "SELECT  `params` FROM #__jomres_channelmanagement_framework_rooms_xref WHERE `property_uid` = ".$property_uid." AND `channel_id` = ".Flight::get('channel_id')." LIMIT 1";
 		$existing_rooms = doSelectSql( $query , 2 );
@@ -327,6 +332,8 @@ class cmf_utilities
 			if ( isset($response->data->response)) {
 				$jomres_properties->other_settings['security_deposit'] = $response->data->response;
 			}
+
+
 		}
 
 		$jomres_properties->remote_data = cmf_utilities::get_property_remote_data ( $property_uid );
