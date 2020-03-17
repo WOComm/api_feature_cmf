@@ -281,6 +281,13 @@ class cmf_utilities
 		$jomres_properties->room_info['room_types']			= $current_property_details->multi_query_result[$property_uid]['room_types'];
 		$jomres_properties->room_info['rooms_max_people']	= $current_property_details->multi_query_result[$property_uid]['rooms_max_people'];
 
+		$jomres_media_centre_images = jomres_singleton_abstract::getInstance('jomres_media_centre_images');
+		$jomres_media_centre_images->get_images($property_uid);
+		$jomres_properties->images['property'] = $jomres_media_centre_images->multi_query_images[$property_uid]['property'];
+		$jomres_properties->images['slideshow'] = $jomres_media_centre_images->multi_query_images[$property_uid]['slideshow'];
+
+		$jomres_properties->images['image_relative_path'] = get_showtime('live_site');
+
 		$query = "SELECT  `params` FROM #__jomres_channelmanagement_framework_rooms_xref WHERE `property_uid` = ".$property_uid." AND `channel_id` = ".Flight::get('channel_id')." LIMIT 1";
 		$existing_rooms = doSelectSql( $query , 2 );
 		if (isset($existing_rooms['params'])) {
