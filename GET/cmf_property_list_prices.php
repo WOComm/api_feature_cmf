@@ -57,6 +57,8 @@ Flight::route('GET /cmf/property/list/prices/@property_uid', function( $property
 				
 				$price_excluding_vat = $tariff['roomrateperday'];
 				if ($mrConfig[ 'prices_inclusive' ] == 1) {
+					$current_property_details = jomres_singleton_abstract::getInstance( 'basic_property_details' );
+					$current_property_details->gather_data($property_uid);
 					$price_excluding_vat =  $current_property_details->get_nett_accommodation_price($price_excluding_vat, $property_uid);
 				}
 				
@@ -69,7 +71,7 @@ Flight::route('GET /cmf/property/list/prices/@property_uid', function( $property
 				}
 				
 				if ($room_rate > 0 ) {
-					$found_tariffs["tariff_sets"][$tariff_type_id][] = array ( "rate_per_night" => $room_rate , "min_days" => $tariff['mindays']  , "max_days" => $tariff['maxdays'] , "minpeople" => $tariff['minpeople'] , "maxpeople" => $tariff['maxpeople'] , "tarifftype_id" => $tariff_type_id , "per_person_per_night" => $per_person_per_night , "number_of_days" => $number_of_days_tariff_spans , "date_range" => array ("start" => $valid_from, "end" => $valid_to ) , "dates" => array_keys ($tariff_date_ranges) );
+					$found_tariffs["tariff_sets"][$tariff_type_id][] = array ( "rate_title" => $tariff["rate_title"] , "rate_per_night" => $room_rate , "min_days" => $tariff['mindays']  , "max_days" => $tariff['maxdays'] , "minpeople" => $tariff['minpeople'] , "maxpeople" => $tariff['maxpeople'] , "tarifftype_id" => $tariff_type_id , "per_person_per_night" => $per_person_per_night , "number_of_days" => $number_of_days_tariff_spans , "date_range" => array ("start" => $valid_from, "end" => $valid_to ) , "dates" => array_keys ($tariff_date_ranges) );
 				}
 				
 			}

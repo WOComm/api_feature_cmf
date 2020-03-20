@@ -72,10 +72,9 @@ class cmf_utilities
 			$thisJRUser->init_user( Flight::get('user_id') );
 		}
 		
+
 		$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_channels WHERE `cms_user_id` =".(int)Flight::get('user_id')." AND `channel_name` = '".$channel_name."' LIMIT 1";
-
 		$result = doSelectSql($query , 1 );
-
 		if ( empty($result) || is_null($result) ) {
 			Flight::halt(204, "User does not have access to this channel ".$channel_name);
 		}
@@ -97,10 +96,21 @@ class cmf_utilities
 		}
 		
 		// Security
-		$query = "SELECT id FROM `#__jomres_channelmanagement_framework_property_uid_xref` WHERE `property_uid` = ".$property_uid." AND `channel_id` =  ".Flight::get('channel_id')." AND `cms_user_id` = ".(int)Flight::get('user_id') ;
-		$result = doSelectSql($query);
-		if (empty($result)) {
-			Flight::halt(204, "Manager does not have access to this property, or the property does not exist");
+		$mrConfig = getPropertySpecificSettings($property_uid);
+		if (!isset($mrConfig['api_privacy_off'])) { // CMF exposure is about allowing a property to be revealed to all REST API callers, regardless of whether or not the calling channel created the property. If exposure is allowed we will just check that the property is in the manager's allowed properties list. If it's not then we will check that the property was created by the calling channel
+			$api_privacy_off = false;
+		} else {
+			$api_privacy_off = (bool) $mrConfig['api_privacy_off'];
+		}
+
+		if ( !$api_privacy_off ) {
+			$query = "SELECT id FROM `#__jomres_channelmanagement_framework_property_uid_xref` WHERE `property_uid` = ".$property_uid." AND `channel_id` =  ".Flight::get('channel_id')." AND `cms_user_id` = ".(int)Flight::get('user_id') ;
+			$result = doSelectSql($query);
+			if (empty($result)) {
+				Flight::halt(204, "Manager does not have access to this property, or the property does not exist.");
+			}
+		} else {
+			cmf_utilities::validate_property_is_in_managers_authorised_properties_list($property_uid);
 		}
 	}
 
@@ -289,7 +299,7 @@ class cmf_utilities
 		if ( isset($jomres_media_centre_images->multi_query_images[$property_uid]['slideshow'])) {
 			$jomres_properties->images['slideshow'] = $jomres_media_centre_images->multi_query_images[$property_uid]['slideshow'];
 		}
-		
+
 		$jomres_properties->images['image_relative_path'] = get_showtime('live_site');
 
 		$query = "SELECT  `params` FROM #__jomres_channelmanagement_framework_rooms_xref WHERE `property_uid` = ".$property_uid." AND `channel_id` = ".Flight::get('channel_id')." LIMIT 1";

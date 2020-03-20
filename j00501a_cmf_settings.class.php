@@ -49,25 +49,25 @@ class j00501a_cmf_settings
 			return;
 		}
 
-		if (!isset($mrConfig['cmf_exposure_allowed'] )) {
-			$mrConfig['cmf_exposure_allowed']  = 0;
-			$query = "INSERT INTO #__jomres_settings (property_uid,akey,value) VALUES ('".(int) get_showtime("property_uid")."','cmf_exposure_allowed','".$mrConfig['cmf_exposure_allowed']."')";
+		if (!isset($mrConfig['api_privacy_off'] )) {
+			$mrConfig['api_privacy_off']  = 0;
+			$query = "INSERT INTO #__jomres_settings (property_uid,akey,value) VALUES ('".(int) get_showtime("property_uid")."','api_privacy_off','".$mrConfig['api_privacy_off']."')";
 			doInsertSql($query, jr_gettext('_JOMRES_MR_AUDIT_EDIT_PROPERTY_SETTINGS', '_JOMRES_MR_AUDIT_EDIT_PROPERTY_SETTINGS', false));
 
 		}
 
 		$yesno = array();
-		$yesno[] = jomresHTML::makeOption( '0', jr_gettext('_JOMRES_COM_MR_NO','_JOMRES_COM_MR_NO') );
-		$yesno[] = jomresHTML::makeOption( '1', jr_gettext('_JOMRES_COM_MR_YES','_JOMRES_COM_MR_YES') );
+		$yesno[] = jomresHTML::makeOption( '0', jr_gettext('_CMF_API_PRIVACY_ON','_CMF_API_PRIVACY_ON') );
+		$yesno[] = jomresHTML::makeOption( '1', jr_gettext('_CMF_API_PRIVACY_OFF','_CMF_API_PRIVACY_OFF') );
 
 		$lists = array();
-		$lists['cmf_exposure_allowed'] = jomresHTML::selectList( $yesno, 'cfg_cmf_exposure_allowed', 'class="inputbox" size="1"', 'value', 'text', $mrConfig['cmf_exposure_allowed'] );
+		$lists['api_privacy_off'] = jomresHTML::selectList( $yesno, 'cfg_api_privacy_off', 'class="inputbox" size="1"', 'value', 'text', $mrConfig['api_privacy_off'] );
 
 		$configurationPanel->startPanel(jr_gettext('_OAUTH_SCOPE_CHANNEL_MANAGEMENT','_OAUTH_SCOPE_CHANNEL_MANAGEMENT',false,false));
 
-		$configurationPanel->setleft(jr_gettext('_CMF_EXPOSURE_ALLOWED','_CMF_EXPOSURE_ALLOWED',false,false));
-		$configurationPanel->setmiddle($lists['cmf_exposure_allowed']);
-		$configurationPanel->setright(jr_gettext('_CMF_EXPOSURE_ALLOWED_DESC','_CMF_EXPOSURE_ALLOWED_DESC',false,false));
+		$configurationPanel->setleft(jr_gettext('_CMF_API_PRIVACY','_CMF_API_PRIVACY',false,false));
+		$configurationPanel->setmiddle($lists['api_privacy_off']);
+		$configurationPanel->setright(jr_gettext('_CMF_API_PRIVACY_DESC','_CMF_API_PRIVACY_DESC',false,false));
 		$configurationPanel->insertSetting();
 
 		$configurationPanel->endPanel();
