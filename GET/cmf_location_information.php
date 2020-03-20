@@ -25,9 +25,13 @@ Flight::route('GET /cmf/location/information/@lat/@long', function($lat , $long 
 	validate_scope::validate('channel_management');
 	
 	cmf_utilities::validate_channel_for_user( );  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
-	
+
+
+
 	$lat = filter_var($lat, FILTER_SANITIZE_SPECIAL_CHARS);
 	$long = filter_var($long, FILTER_SANITIZE_SPECIAL_CHARS);
+
+	cmf_utilities::cache_read($lat.'_'.$long);
 
 	try {
 		$client = new GuzzleHttp\Client();
@@ -58,7 +62,9 @@ Flight::route('GET /cmf/location/information/@lat/@long', function($lat , $long 
 			$reply->region_id = $results[0][0]['id'];
 		}
 	}
-	
+
+	cmf_utilities::cache_write( $lat.'_'.$long , "response" , $reply );
+
 	Flight::json( $response_name = "response" , $reply );
 	});
 
