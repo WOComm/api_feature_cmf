@@ -77,7 +77,7 @@ Flight::route('PUT /cmf/property/base/price', function()
 
 		$jrportal_rates->dates_rates				= $epoch_roomrateperday;
 		$jrportal_rates->dates_mindays				= $epoch_mindays;
-		$jrportal_rates->save_rate();
+		$response = $jrportal_rates->save_rate();
 	} 
 
 	Flight::json( $response_name = "response" , true );

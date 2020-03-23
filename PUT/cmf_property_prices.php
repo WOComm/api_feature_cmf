@@ -33,7 +33,7 @@ Flight::route('PUT /cmf/property/prices', function()
 	cmf_utilities::validate_property_uid_for_user($property_uid);
 	
 	$new_ratepernight_array  = array();
-	
+	$new_mindays_array  = array();
 	foreach ( $date_sets as $date_set ) {
 		if ( !cmf_utilities::validate_date($date_set->date_from) ) {
 			Flight::halt(204, "Date from incorrect, must be in Y-m-d format");
@@ -51,6 +51,7 @@ Flight::route('PUT /cmf/property/prices', function()
 		foreach ($dates_array as $date ) {
 			$epoch = (string)strtotime($date);
 			$new_ratepernight_array[$epoch] = convert_entered_price_into_safe_float($date_set->ratepernight);
+			$new_mindays_array[$epoch] = 1;
 		}
 	}
 	
@@ -90,18 +91,28 @@ Flight::route('PUT /cmf/property/prices', function()
 				$date_from				= str_replace ( "/" , "-" , $tariff['validfrom']);
 				$date_to				= str_replace ( "/" , "-" , $tariff['validto']);
 				$dates_array = array_keys(cmf_utilities::get_date_ranges( $date_from , $date_to ));
+
 				foreach ($dates_array as $date) {
 					$epoch = strtotime($date);
 					$epoch_roomrateperday[$epoch]	= (string)$tariff['roomrateperday'];
 					$epoch_mindays[$epoch]			= (string)$tariff['mindays'];
 				}
 			}
-		
+
+		// Up until now we weren't able to set the min days, so we'll do that here now that we have the tariff's min days setting. Without it a no-index error is thrown by php
+		foreach ( $new_mindays_array as $epoch => $val ) {
+			$new_mindays_array[$epoch] = (string)$tariff['mindays'];
+		}
+
 		$epoch_roomrateperday = $new_ratepernight_array + $epoch_roomrateperday ;
 		ksort($epoch_roomrateperday);
 
+		$epoch_mindays = $new_mindays_array + $epoch_mindays ;
+		ksort($epoch_mindays);
+
 		$jrportal_rates->dates_rates				= $epoch_roomrateperday;
 		$jrportal_rates->dates_mindays				= $epoch_mindays;
+
 		$jrportal_rates->save_rate();
 		}
 	}

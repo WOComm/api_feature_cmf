@@ -112,6 +112,7 @@ class cmf_utilities
 		} else {
 			cmf_utilities::validate_property_is_in_managers_authorised_properties_list($property_uid);
 		}
+		Flight::set('response_envelope_property_uid' , $property_uid );
 	}
 
 	/**
@@ -148,15 +149,20 @@ class cmf_utilities
 	* 
 	*/
 	
-	public static function cache_read($property_uid)
+	public static function cache_read($property_uid  , $general_data = false  )
 	{
 		$hash = 'sha256';
 		$algos = hash_algos();
 		if ( in_array( 'sha512' , $algos ) ) {
 			$hash = 'sha512';
 		}
-		
-		$temp_path = JOMRES_TEMP_ABSPATH."cmf_rest_api";
+
+		if (!$general_data ) {
+			$temp_path = JOMRES_TEMP_ABSPATH."cmf_rest_api";
+		} else {
+			$temp_path = JOMRES_TEMP_ABSPATH."cmf_rest_api".JRDS."general";
+		}
+
 		if (!is_dir($temp_path)) {
 			if (!mkdir($temp_path)) {
 				Flight::halt(500, "Can't create temporary directory");
@@ -187,10 +193,10 @@ class cmf_utilities
 	* Write to the cache file
 	*
 	* 
-	* 
+	* General data refers to information that is not specific to any property uid
 	*/
 	
-	public static function cache_write($property_uid , $response_name = '' , $response_contents = '' )
+	public static function cache_write($property_uid , $response_name = '' , $response_contents = ''  , $general_data = false )
 	{
 		$hash = 'sha256';
 		$algos = hash_algos();
@@ -200,11 +206,15 @@ class cmf_utilities
 		
 		$siteConfig = jomres_singleton_abstract::getInstance('jomres_config_site_singleton');
 		$jrConfig = $siteConfig->get();
-		if ($jrConfig['development_production'] == 'development') { // If we are in development mode, we don't want to use caching
+/*		if ($jrConfig['development_production'] == 'development') { // If we are in development mode, we don't want to use caching
 			return;
+		}*/
+
+		if (!$general_data ) {
+			$temp_path = JOMRES_TEMP_ABSPATH."cmf_rest_api";
+		} else {
+			$temp_path = JOMRES_TEMP_ABSPATH."cmf_rest_api".JRDS."general";
 		}
-		
-		$temp_path = JOMRES_TEMP_ABSPATH."cmf_rest_api";
 		if (!is_dir($temp_path)) {
 			if (!mkdir($temp_path)) {
 				Flight::halt(500, "Can't create temporary directory");
@@ -220,7 +230,7 @@ class cmf_utilities
 		$request = Flight::request();
 		$url = $request->url;
 		$file_name = hash($hash , $url).".php";
-		
+
 		if (!file_exists($temp_path.JRDS.$property_uid.JRDS.$file_name)) {
 			$cache_contents = '<?php
 				defined( \'_JOMRES_INITCHECK\' ) or die( \'\' );
@@ -233,7 +243,7 @@ class cmf_utilities
 						}
 					}
 				';
-			
+
 			file_put_contents($temp_path.JRDS.$property_uid.JRDS.$file_name, $cache_contents);
 		}
 	}
@@ -286,10 +296,13 @@ class cmf_utilities
 		$jomres_properties->property_othertransport			= $current_property_details->multi_query_result[$property_uid]['property_othertransport'];
 		$jomres_properties->property_policies_disclaimers	= $current_property_details->multi_query_result[$property_uid]['property_policies_disclaimers'];
 
-		$jomres_properties->room_info['rooms']				= $current_property_details->multi_query_result[$property_uid]['rooms'];
-		$jomres_properties->room_info['rooms_by_type']		= $current_property_details->multi_query_result[$property_uid]['rooms_by_type'];
-		$jomres_properties->room_info['room_types']			= $current_property_details->multi_query_result[$property_uid]['room_types'];
-		$jomres_properties->room_info['rooms_max_people']	= $current_property_details->multi_query_result[$property_uid]['rooms_max_people'];
+		if (isset($current_property_details->multi_query_result[$property_uid]['rooms'])) {
+			$jomres_properties->room_info['rooms']				= $current_property_details->multi_query_result[$property_uid]['rooms'];
+			$jomres_properties->room_info['rooms_by_type']		= $current_property_details->multi_query_result[$property_uid]['rooms_by_type'];
+			$jomres_properties->room_info['room_types']			= $current_property_details->multi_query_result[$property_uid]['room_types'];
+			$jomres_properties->room_info['rooms_max_people']	= $current_property_details->multi_query_result[$property_uid]['rooms_max_people'];
+		}
+
 
 		$jomres_media_centre_images = jomres_singleton_abstract::getInstance('jomres_media_centre_images');
 		$jomres_media_centre_images->get_images($property_uid);

@@ -27,48 +27,48 @@ Flight::route('GET /cmf/location/information/@lat/@long', function($lat , $long 
 	cmf_utilities::validate_channel_for_user( );  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
 
 
-
 	$lat = filter_var($lat, FILTER_SANITIZE_SPECIAL_CHARS);
 	$long = filter_var($long, FILTER_SANITIZE_SPECIAL_CHARS);
 
-	cmf_utilities::cache_read($lat.'_'.$long);
+	cmf_utilities::cache_read($lat.'_'.$long , $general_data = true );
 
 	try {
 		$client = new GuzzleHttp\Client();
 
-		$response = $client->request('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat='.$lat.'&lon='.$long , ['connect_timeout' => 4 , 'verify' => false , 'http_errors' => false] );
+		$response = $client->request('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat='.$lat.'&lon='.$long , ['connect_timeout' => 10 , 'verify' => false , 'http_errors' => false] );
 		$data = json_decode((string)$response->getBody());
 		}
 		catch (GuzzleHttp\Exception\RequestException $e) {
-			//
+			var_dump($e->getMessage());exit;
 			}
+		$reply = new stdClass();
 
-	$reply = new stdClass();
-	$reply->country_code = strtoupper($data->address->country_code);
-	$reply->region_id = find_region_id($data->address->state);
-	if (is_null($reply->region_id)) { // It can take a while to setup the regions class (because of translations) so we'll only generate this data if the region_id wasn't found
-		$jomres_regions = jomres_singleton_abstract::getInstance('jomres_regions');
-		$regions = array();
-		foreach ( $jomres_regions->regions as $region ) {
-			if ( $region['countrycode'] == $reply->country_code ) {
-				$region_id = $region['id'];
-				$regions[ ] =  array("id"=> $region_id , "region_name" => $region['regionname']);
+		if (isset($data->address)) {
+			$reply->country_code = strtoupper($data->address->country_code);
+			$reply->region_id = find_region_id($data->address->state);
+			if (is_null($reply->region_id)) { // It can take a while to setup the regions class (because of translations) so we'll only generate this data if the region_id wasn't found
+				$jomres_regions = jomres_singleton_abstract::getInstance('jomres_regions');
+				$regions = array();
+				foreach ( $jomres_regions->regions as $region ) {
+					if ( $region['countrycode'] == $reply->country_code ) {
+						$region_id = $region['id'];
+						$regions[ ] =  array("id"=> $region_id , "region_name" => $region['regionname']);
+					}
+				}
+				$sfs = new SimpleFuzzySearch($regions, ["id" , "region_name"], $data->address->state );
+				$results = $sfs->search();
+				if ( isset($results[0][0]['id']) ) {
+					$reply->region_id = $results[0][0]['id'];
+				}
 			}
+			cmf_utilities::cache_write( $lat.'_'.$long , "response" , $reply  , $general_data = true  );
 		}
-		
-		$sfs = new SimpleFuzzySearch($regions, ["id" , "region_name"], $data->address->state );
-		$results = $sfs->search();
-		if ( isset($results[0][0]['id']) ) {
-			$reply->region_id = $results[0][0]['id'];
-		}
-	}
 
-	cmf_utilities::cache_write( $lat.'_'.$long , "response" , $reply );
 
 	Flight::json( $response_name = "response" , $reply );
 	});
 
-	
+
 
 /**
  * A Simple Fuzzy Search component using
