@@ -35,7 +35,7 @@ Flight::route('PUT /cmf/property/cleaning/price', function()
 	
 	$property = cmf_utilities::get_property_object_for_update($property_uid); // This utility will return an instance of jomres_properties, because this class has a method for updating an existing property without going through the UI.
 	
-	_OAUTH_SCOPE_CHANNEL_MANAGEMENT_CLEANING_PRICE
+	// _OAUTH_SCOPE_CHANNEL_MANAGEMENT_CLEANING_PRICE
 	
 	$property = cmf_utilities::update_property($property);  // This utility will perform any checks required and then update the db with the property details
 

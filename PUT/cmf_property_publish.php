@@ -34,7 +34,7 @@ Flight::route('PUT /cmf/property/publish', function()
 	
 	jr_import('jomres_sanity_check');
 	$jomres_sanity_check = new jomres_sanity_check( true , $property_uid );
-	
+
 	$call_self = new call_self( );
 	$elements = array(
 		"method"=>"GET",
@@ -42,11 +42,11 @@ Flight::route('PUT /cmf/property/publish', function()
 		"data"=>array(),
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
-			
+
 	$property_status = json_decode($call_self->call($elements));
 
 	$response = false;
-	if ( $property_status->data->response->status_code == "2" ) {
+	if ( $property_status->data->response == "2" ) {
 		$jomres_properties = jomres_singleton_abstract::getInstance('jomres_properties');
 		$jomres_properties->propertys_uid = $property_uid;
 		$jomres_properties->publish_property();
