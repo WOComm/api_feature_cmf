@@ -57,9 +57,6 @@ class cmf_utilities
 		}
 
 		if ( isset($all_headers['X-JOMRES-proxy_id']) && (int)$all_headers['X-JOMRES-proxy_id'] > 0 ) {  // Only the "system" OAuth client can send proxy ids. "system" is used by plugins in Jomres to call the cmf rest api functionality, however when working on properties, we need to actually hand over the real property manager's cms id. In essence, the "system" client is only used to get valid tokens and to call the endpoint, from that point onwards, the manager's id is used.
-		
-		// TODO : Modify this to instead accept clients with the "*" scope
-		
 			if ( Flight::get('scopes') == array("*") ) {
 				Flight::set('user_id' , (int)$all_headers['X-JOMRES-proxy_id'] );
 				$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
@@ -71,10 +68,9 @@ class cmf_utilities
 			$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
 			$thisJRUser->init_user( Flight::get('user_id') );
 		}
-		
 
-		$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_channels WHERE `cms_user_id` =".(int)Flight::get('user_id')." AND `channel_name` = '".$channel_name."' LIMIT 1";
-		$result = doSelectSql($query , 1 );
+		$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_channels WHERE `cms_user_id` =".Flight::get('user_id')." AND `channel_name` = '".$channel_name."' LIMIT 1";
+		$result = doSelectSql($query);
 		if ( empty($result) || is_null($result) ) {
 			Flight::halt(204, "User does not have access to this channel ".$channel_name);
 		}
