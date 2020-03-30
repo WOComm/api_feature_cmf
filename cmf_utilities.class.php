@@ -70,7 +70,7 @@ class cmf_utilities
 		}
 
 		$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_channels WHERE `cms_user_id` =".Flight::get('user_id')." AND `channel_name` = '".$channel_name."' LIMIT 1";
-		$result = doSelectSql($query);
+		$result = doSelectSql($query , 1 );
 		if ( empty($result) || is_null($result) ) {
 			Flight::halt(204, "User does not have access to this channel ".$channel_name);
 		}
