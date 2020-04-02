@@ -748,7 +748,7 @@ class cmf_utilities
 		return $deposit_response;
 	}
 	
-	public static function build_booking_output( $contract , $property_uid = 0 , $linked_bookings = array() )
+	public static function build_booking_output( $contract , $property_uid = 0 , $linked_bookings = array() , $room_types_booked = array() )
 	{
 		if ( $property_uid == 0 ) {
 			Flight::halt(204, "Property uid not set");
@@ -859,11 +859,13 @@ class cmf_utilities
 		}
 			
 		$mapping = array ();
-			
+
+
+
 		if ( array_key_exists(  $contract->booking_id , $linked_bookings)) {
-			$mapping =  $linked_bookings[$contract->booking_id] ;
+			$mapping['linked_bookings'] =  $linked_bookings[$contract->booking_id] ;
 		}
-			
+
 		$status_text = "No description";
 		if (isset($booking_status_texts_array[ (string)$booking_status ])) {
 			$status_text = $booking_status_texts_array[(string)$booking_status];
@@ -874,6 +876,7 @@ class cmf_utilities
 			"booking_number"		=> $contract->booking_number,
 			"invoice_id"			=> $contract->invoice_id,
 			"invoice_number"		=> $contract->invoice_number,
+			"comments"				=> $contract->special_reqs,
 				
 			"status" => array ( "status_code" => $booking_status , "status_text" => $status_text ),
 				
@@ -895,6 +898,8 @@ class cmf_utilities
 				
 			"guest_numbers"			=> $guest_numbers,
 
+			"room_types_booked"			=> $room_types_booked,
+
 			"guest_data" => array (
 				"guest_id"				=> $contract->guests_uid,
 				"guest_system_id"		=> $contract->mos_userid,
@@ -905,6 +910,7 @@ class cmf_utilities
 				"enc_city"				=> $jomres_encryption->decrypt($contract->enc_town),
 				"enc_region"			=> jomres_decode(find_region_name($jomres_encryption->decrypt($contract->enc_county))),
 				"country"				=> getSimpleCountry($jomres_encryption->decrypt($contract->enc_country)),
+				"country_code"			=> $jomres_encryption->decrypt($contract->enc_country),
 					"enc_postcode"			=> $jomres_encryption->decrypt($contract->enc_postcode),
 					"enc_preferences"		=> $jomres_encryption->decrypt($contract->enc_preferences),
 					"enc_tel_landline"		=> $jomres_encryption->decrypt($contract->enc_tel_landline),

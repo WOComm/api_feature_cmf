@@ -30,14 +30,12 @@ Flight::route('GET /cmf/property/booking/@property_uid/@contract_uid', function(
 	$property_uid			= (int)$property_uid;
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
-	
+
 	cmf_utilities::cache_read($property_uid);
-	
 
 	if ( (int)$contract_uid == 0) {
 		Flight::halt(204, "Booking di not sent");
 	}
-
 
 	$query = "SELECT channel_id  , remote_booking_id , local_booking_id  FROM #__jomres_channelmanagement_framework_bookings_xref WHERE property_uid  = ".$property_uid;
 	$cross_referenced_bookings = doSelectSql($query);
@@ -99,14 +97,46 @@ Flight::route('GET /cmf/property/booking/@property_uid/@contract_uid', function(
 					
 					
 		$jomresContractsList = doSelectSql($query);
-		
+
+		$query = "SELECT `room_uid` FROM #__jomres_room_bookings WHERE `contract_uid` = ".(int)$contract_uid." ORDER BY `room_uid` ASC ";
+		$room_bookings = doSelectSql($query);
+
+		$room_types_booked = array();
+
+		if (! empty($room_bookings) ) {
+			$current_property_details = jomres_singleton_abstract::getInstance('basic_property_details');
+			$current_property_details->gather_data($property_uid);
+			$booked_rooms = array();
+			foreach ( $room_bookings as $room ) {
+				$booked_rooms[] = $room->room_uid;
+			}
+
+			foreach ( $current_property_details->rooms_by_type as $room_type_id=>$room_type ) {
+				foreach ($booked_rooms as $room_uid ) {
+					if ( in_array( $room_uid , $room_type ) ) {
+						if (isset($room_types_booked[$room_type_id]) ) {
+							$room_types_booked[$room_type_id]['number_of_rooms_of_type_booked']++;
+						} else {
+							$room_types_booked[$room_type_id]['room_type_name'] = $current_property_details->classAbbvs[$room_type_id]['abbv'];
+							$room_types_booked[$room_type_id]['room_type_id'] = $room_type_id;
+							$room_types_booked[$room_type_id]['number_of_rooms_of_type_booked'] = 1;
+
+						}
+						$room_types_booked[$room_type_id]['room_ids'][] =  $room_uid;
+					}
+				}
+			}
+		}
+
+
+
 	$bookings = array();
 	
 	if (!empty($jomresContractsList)) {
 		$count = count($jomresContractsList);
 		for ( $i = 0 ; $i < $count ; $i++ ) {
 			$contract = $jomresContractsList[$i];
-			$bookings[] = cmf_utilities:: build_booking_output ( $contract , $property_uid , $linked_bookings ) ;
+			$bookings[] = cmf_utilities:: build_booking_output ( $contract , $property_uid , $linked_bookings , $room_types_booked ) ;
 		}
 	}
 
