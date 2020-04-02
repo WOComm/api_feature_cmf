@@ -37,6 +37,28 @@ Flight::route('GET /cmf/properties/ids', function()
 		}
 	}
 
+	// We now need a list of properties that have not been created by this channel, however they're marked in property configuration as channel security OFF. Those properties can be managed by channels that did not create the property (primarily used by jomres2jomres so that children can make changes on the parent property, e.g. adding bookings)
+
+	// First we need to get a list of all properties for the manager, so we'll initialise the user, then get a list of their authorised properties
+	$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
+	$thisJRUser->init_user((int)Flight::get('user_id'));
+
+	if ($thisJRUser->accesslevel < 70) { // Bugger ye off if you shouldn't be here
+		return;
+	}
+
+	if ( !empty($thisJRUser->authorisedProperties)) { // Shouldn't happen, but...
+		foreach ($thisJRUser->authorisedProperties as $property_uid ) {
+			$mrConfig = getPropertySpecificSettings($property_uid);
+			if ( isset($mrConfig['api_privacy_off']) && $mrConfig['api_privacy_off'] == 1 ) {
+				$response[] = array ( "local_property_uid" => $property_uid , "remote_property_uid" => null ) ;
+			}
+		}
+	}
+
+
+
+
 	Flight::json( $response_name = "response" , $response ); 
 	});
 	
