@@ -30,7 +30,11 @@ Flight::route('POST /cmf/mapping/@channel_name/', function($channel_name , $dict
 	$channel_name = filter_var($channel_name, FILTER_SANITIZE_SPECIAL_CHARS);
 	$friendly_name = urldecode(filter_var($friendly_name, FILTER_SANITIZE_SPECIAL_CHARS));
 	$params = filter_var( $_POST['params'], FILTER_SANITIZE_SPECIAL_CHARS);
-	
+
+	if (empty($params) || $params === '' ) {
+		Flight::halt(204, "Parameters are empty, that can't be right. Halting.");
+	}
+
 	$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_channels WHERE `cms_user_id` =".(int)Flight::get('user_id')." AND `channel_name` = '".$channel_name."' LIMIT 1";
 	$id = doSelectSql($query , 1 );
 

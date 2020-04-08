@@ -24,9 +24,7 @@ Flight::route('POST /cmf/dictionary/items/map/@remote_type/@local_type', functio
 	$remote_type = filter_var($remote_type, FILTER_SANITIZE_SPECIAL_CHARS);
 	$local_type = filter_var($local_type, FILTER_SANITIZE_SPECIAL_CHARS);
 
-	$params = $_POST['params'];
-	
-	$params = (array)json_decode($params);
+	$params =json_decode(stripslashes($_POST['params']) );
 
 	$data_object = array(); // Not really an object :s
 	foreach ($params as $param ) {
