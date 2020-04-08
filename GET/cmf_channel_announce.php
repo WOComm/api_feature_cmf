@@ -29,19 +29,15 @@ Flight::route('GET /cmf/channel/announce/@channel_name', function($channel_name)
 	// We only do this here in Announce
 	$scopes = Flight::get('scopes');
 	if ( $scopes[0]  == '*' ) { // It's an administrator api client, we'll find the proxy id. In 99% of cases the api feature validates the channel for the user, but we don't do that here therefore we'll filch a bit of code from the channel validation to ensure that we've set the correct user id when announcing the channel
-	
 		$all_headers = getallheaders();
-		
-		if (!isset($all_headers['X-JOMRES-proxy_id'])) {
-			Flight::halt(204, "GET Announce Proxy id not set 1");
-		}
-		
-		if ((int)$all_headers['X-JOMRES-proxy_id'] > 0 ) {
+
+		// Most calls will come from the channel management framework working on behalf of a user, we can tell if this is happening because the calling user with the * scope passes a proxy id. If it's set we'll initialise that user and work as them for the purpose of security
+		// Sometimes however "system" will want to work as itself, which we will allow
+
+		if ( isset($all_headers['X-JOMRES-proxy_id']) && (int)$all_headers['X-JOMRES-proxy_id'] > 0 ) {
 			Flight::set('user_id' , (int)$all_headers['X-JOMRES-proxy_id'] );
 			$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
 			$thisJRUser->init_user( (int)$all_headers['X-JOMRES-proxy_id'] );
-		} else {
-			Flight::halt(204, "GET Announce Proxy id not set 2");
 		}
 	}
 	

@@ -60,7 +60,7 @@ Flight::route('PUT /cmf/admin/api/client', function()
 		"data"=>array()
 		);
 			
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	
 	if ( !isset($response->data->response) || empty($response->data->response) ){
 		Flight::halt(204, "Cannot find valid scopes for cms user id");

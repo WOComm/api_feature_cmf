@@ -31,7 +31,7 @@ Flight::route('PUT /cmf/channel/webhook', function()
 	$settings_string		= (string)$_PUT['settings'];
 	$enabled				= (int)(bool)$_PUT['enabled'];
 	
-	$settings_json_decoded = json_decode($settings_string);
+	$settings_json_decoded = json_decode(stripslashes($settings_string));
 	
 	if ( $settings_json_decoded == false ) {
 		Flight::halt(204, "Cannot decode settings");

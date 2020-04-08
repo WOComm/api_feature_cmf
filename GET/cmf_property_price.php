@@ -40,7 +40,7 @@ Flight::route('GET /cmf/property/price/@property_uid/@start_date/@end_date/@numb
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
-	$blocks = json_decode($call_self->call($elements));
+	$blocks = json_decode(stripslashes($call_self->call($elements)));
 	
 	$potential_booking_date_ranges = array_keys (cmf_utilities::get_date_ranges( $start_date , $end_date ));
 	if (!empty($blocks->data->response)) {
@@ -58,7 +58,7 @@ Flight::route('GET /cmf/property/price/@property_uid/@start_date/@end_date/@numb
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
-	$prices = json_decode($call_self->call($elements));
+	$prices = json_decode(stripslashes($call_self->call($elements)));
 	
 	if (!isset($prices->data->response)) {
 		Flight::halt(204, "Cannot get prices for property");
@@ -71,7 +71,7 @@ Flight::route('GET /cmf/property/price/@property_uid/@start_date/@end_date/@numb
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
-	$tariff_type_dates = json_decode($call_self->call($elements));
+	$tariff_type_dates = json_decode(stripslashes($call_self->call($elements)));
 	
 	if (!isset($tariff_type_dates->data->response->tariff_sets) || empty($tariff_type_dates->data->response->tariff_sets) ) {
 		Flight::halt(204, "Cannot get tariff type dates for property");

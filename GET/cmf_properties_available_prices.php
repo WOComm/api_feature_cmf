@@ -53,7 +53,7 @@ Flight::route('GET /cmf/properties/available/prices/@start_date/@end_date/@numbe
 				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
-			$blocks = json_decode($call_self->call($elements));
+			$blocks = json_decode(stripslashes($call_self->call($elements)));
 
 			if (!empty($blocks->data->response)) {
 				foreach ($potential_booking_date_ranges as $date ) {
@@ -70,7 +70,7 @@ Flight::route('GET /cmf/properties/available/prices/@start_date/@end_date/@numbe
 					"data"=>array(),
 					"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 					);
-				$prices_response = json_decode($call_self->call($elements));
+				$prices_response = json_decode(stripslashes($call_self->call($elements)));
 				
 			}
 			if ( $prices_response != false ) {

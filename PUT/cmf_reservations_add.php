@@ -35,7 +35,7 @@ Flight::route('PUT /cmf/reservations/add', function()
 	$tmpBookingHandler = jomres_singleton_abstract::getInstance('jomres_temp_booking_handler');
 	$tmpBookingHandler->initBookingSession( $session_id );
 
-	$reservations = json_decode($_PUT['reservations']);
+	$reservations = json_decode(stripslashes($_PUT['reservations']));
 	
 	if ($reservations == false ) {
 		Flight::halt(204, "Invalid reservation data passed");
@@ -54,7 +54,7 @@ Flight::route('PUT /cmf/reservations/add', function()
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 			
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 
 	if ( !isset($response->data->response) || empty($response->data->response) ) { // Critical error
 		Flight::halt(204, "Cannot determine manager's properties.");

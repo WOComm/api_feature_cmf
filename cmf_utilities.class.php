@@ -159,15 +159,21 @@ class cmf_utilities
 			$temp_path = JOMRES_TEMP_ABSPATH."cmf_rest_api".JRDS."general";
 		}
 
+		if (!is_dir( JOMRES_TEMP_ABSPATH."cmf_rest_api")) {
+			if (!mkdir( JOMRES_TEMP_ABSPATH."cmf_rest_api")) {
+				Flight::halt(500, "Can't create temporary directory ". JOMRES_TEMP_ABSPATH."cmf_rest_api");
+			}
+		}
+
 		if (!is_dir($temp_path)) {
 			if (!mkdir($temp_path)) {
-				Flight::halt(500, "Can't create temporary directory");
+				Flight::halt(500, "Can't create temporary directory ".$temp_path);
 			}
 		}
 		
 		if (!is_dir($temp_path.JRDS.$property_uid)) {
 			if (!mkdir($temp_path.JRDS.$property_uid)) {
-				Flight::halt(500, "Can't create temporary directory");
+				Flight::halt(500, "Can't create temporary directory ".$temp_path.JRDS.$property_uid);
 			}
 		}
 		
@@ -341,7 +347,7 @@ class cmf_utilities
 				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
-			$response = json_decode($call_self->call($elements));
+			$response = json_decode(stripslashes($call_self->call($elements)));
 			
 			if ( isset($response->data->response)) {
 				$jomres_properties->other_settings['cleaning_fee'] = $response->data->response;
@@ -357,7 +363,7 @@ class cmf_utilities
 				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
-			$response = json_decode($call_self->call($elements));
+			$response = json_decode(stripslashes($call_self->call($elements)));
 			
 			if ( isset($response->data->response)) {
 				$jomres_properties->other_settings['security_deposit'] = $response->data->response;
@@ -651,7 +657,7 @@ class cmf_utilities
 				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
-			$response = json_decode($call_self->call($elements));
+			$response = json_decode(stripslashes($call_self->call($elements)));
 			
 			if (isset($response->data->response) && $response->data->response > 0 ) {
 				$security_deposit = (float)$response->data->response;
@@ -674,7 +680,7 @@ class cmf_utilities
 				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 					
-			$response = json_decode($call_self->call($elements));
+			$response = json_decode(stripslashes($call_self->call($elements)));
 
 			if (isset($response->data->response) && $response->data->response > 0 ) {
 				$cleaning_fee = (float)$response->data->response;
@@ -696,7 +702,7 @@ class cmf_utilities
 				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
-			$response = json_decode($call_self->call($elements));
+			$response = json_decode(stripslashes($call_self->call($elements)));
 
 			if (!isset($response->data->response)) {
 				Flight::halt(204, "Cannot determine deposit setting for property");
@@ -772,7 +778,7 @@ class cmf_utilities
 				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 				);
 			
-			$booking_statuses = json_decode($call_self->call($elements));
+			$booking_statuses = json_decode(stripslashes($call_self->call($elements)));
 			
 			$booking_status_texts_array = array();
 			if ( isset($booking_statuses->data->response)) {
@@ -1093,7 +1099,7 @@ class cmf_utilities
 			"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 			);
 				
-		$response = json_decode($call_self->call($elements));
+		$response = json_decode(stripslashes($call_self->call($elements)));
 	
 		if ( isset($response->data->response) && !empty($response->data->response) ) {
 			foreach ($response->data->response as $available_rooms) {
@@ -1173,7 +1179,7 @@ class cmf_utilities
 							"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 							);
 
-						$link_response = json_decode($call_self->call($elements));
+						$link_response = json_decode(stripslashes($call_self->call($elements)));
 						
 						if ( isset($link_response->data->response->link_id) && $link_response->data->response->link_id > 0 ) {
 							$reply = (object) array( 

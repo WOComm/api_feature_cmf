@@ -41,7 +41,7 @@ Flight::route('GET /cmf/property/securitydeposit/@id', function( $property_uid )
 	
 	$security_deposit = 0.0;
 	
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	if ( isset ($response->data->response)) {
 		if (!empty($response->data->response)) {
 			foreach ($response->data->response as $extra ) {

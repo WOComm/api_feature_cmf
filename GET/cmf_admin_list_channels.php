@@ -49,7 +49,7 @@ Flight::route('GET /cmf/admin/list/channels', function()
 	}
 
 	// A little hacky (looking for ids less than at the end) :( 
-	$query = "SELECT `id` , `cms_user_id` , `channel_name` , `channel_friendly_name` FROM #__jomres_channelmanagement_framework_channels WHERE cms_user_id < 9999999999";
+	$query = "SELECT `id` , `cms_user_id` , `channel_name` , `channel_friendly_name` FROM #__jomres_channelmanagement_framework_channels WHERE cms_user_id < 999999999";
 	$result = doSelectSql($query );
 
 	$channels = array();

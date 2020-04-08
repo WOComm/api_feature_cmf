@@ -30,7 +30,7 @@ Flight::route('PUT /cmf/property/plugin/settings', function()
 
 	$property_uid			= (int)$_PUT['property_uid'];
 	$plugin_name			= filter_var( $_PUT['plugin'], FILTER_SANITIZE_SPECIAL_CHARS);
-	$params					= json_decode($_PUT['params']);
+	$params					= json_decode(stripslashes($_PUT['params']));
 	
 
 	

@@ -31,7 +31,7 @@ Flight::route('GET /cmf/admin/list/channel/properties/@channel_id', function( $c
 		"data"=>array()
 		);
 			
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	
 	if (empty($response->data->response)) {
 		Flight::halt(204, "No managers in system.");

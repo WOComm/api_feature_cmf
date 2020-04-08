@@ -29,7 +29,7 @@ Flight::route('GET /cmf/properties/ids', function()
 	$query = "SELECT `property_uid` , `remote_property_uid` FROM #__jomres_channelmanagement_framework_property_uid_xref WHERE `cms_user_id` = ".(int)Flight::get('user_id')." AND `channel_id` = ".(int) Flight::get('channel_id')." ";
 
 	$result = doSelectSql($query);
-	
+
 	$response = array();
 	if (!empty($result)) {
 		foreach ( $result as $r ) {
@@ -43,7 +43,7 @@ Flight::route('GET /cmf/properties/ids', function()
 	$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
 	$thisJRUser->init_user((int)Flight::get('user_id'));
 
-	if ($thisJRUser->accesslevel < 70) { // Bugger ye off if you shouldn't be here
+	if ($thisJRUser->accesslevel < 50) { // Bugger ye off if you shouldn't be here
 		return;
 	}
 

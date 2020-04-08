@@ -43,7 +43,7 @@ Flight::route('PUT /cmf/property/publish', function()
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 
-	$property_status = json_decode($call_self->call($elements));
+	$property_status = json_decode(stripslashes($call_self->call($elements)));
 
 	$response = false;
 	if ( $property_status->data->response == "2" ) {
