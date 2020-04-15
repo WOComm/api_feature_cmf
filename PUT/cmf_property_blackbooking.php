@@ -28,8 +28,8 @@ Flight::route('PUT /cmf/property/blackbooking', function()
 	cmf_utilities::validate_channel_for_user();  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
 
 	$property_uid			= (int)$_PUT['property_uid'];
-	$dates_unavailable		= json_decode($_PUT['availability']);
-	$room_ids				= json_decode($_PUT['room_ids']);
+	$dates_unavailable		= json_decode(stripslashes($_PUT['availability']));
+	$room_ids				= json_decode(stripslashes($_PUT['room_ids']));
 	$remote_booking_id		= filter_var( $_PUT['remote_booking_id'] , FILTER_SANITIZE_SPECIAL_CHARS );
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);

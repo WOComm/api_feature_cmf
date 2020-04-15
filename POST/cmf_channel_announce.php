@@ -48,14 +48,15 @@ Flight::route('POST /cmf/channel/announce/@channel_name/@friendly_name', functio
 	
 	$channel_name = filter_var($channel_name, FILTER_SANITIZE_SPECIAL_CHARS);
 	$friendly_name = urldecode(filter_var($friendly_name, FILTER_SANITIZE_SPECIAL_CHARS));
-	$params = filter_var( $_POST['params'], FILTER_SANITIZE_SPECIAL_CHARS);
+	//$params = filter_var( $_POST['params'], FILTER_SANITIZE_SPECIAL_CHARS);
+	$params = '';
 
 	$query = "SELECT `id` FROM #__jomres_channelmanagement_framework_channels WHERE `cms_user_id` =".Flight::get('user_id')." AND `channel_name` = '".$channel_name."' LIMIT 1";
 	$id = doSelectSql($query , 1 );
 
 	if ( (int)$id == 0 && Flight::get('user_id') > 0 ) {
 
-		$query = "INSERT INTO #__jomres_channelmanagement_framework_channels ( `cms_user_id` , `channel_name` , `channel_friendly_name` , `params` ) VALUES ( ".Flight::get('user_id')." , '".$channel_name."', '".$friendly_name."' , '".serialize($params)."' ) ";
+		$query = "INSERT INTO #__jomres_channelmanagement_framework_channels ( `cms_user_id` , `channel_name` , `channel_friendly_name` , `params` ) VALUES ( ".Flight::get('user_id')." , '".$channel_name."', '".$friendly_name."' , '".$params."' ) ";
 
 		$id = doInsertSql($query);
 		

@@ -27,7 +27,7 @@ Flight::route('PUT /cmf/admin/channel/assign/properties', function()
 	$_PUT = $GLOBALS['PUT'];
 	
 	$channel_id					= (int)$_PUT['channel_id'];
-	$properties				= json_decode($_PUT['properties']);
+	$properties				= json_decode(stripslashes($_PUT['properties']));
 
 	if ($channel_id == 0 ) {
 		Flight::halt(204, "Channel id not sent");

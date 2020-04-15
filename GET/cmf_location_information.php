@@ -39,7 +39,9 @@ Flight::route('GET /cmf/location/information/@lat/@long', function($lat , $long 
 		$client = new GuzzleHttp\Client();
 
 		$response = $client->request('GET', 'app.jomres.net/jomres/api/geocoding/information/'.$jrConfig["licensekey"].'/'.$lat.'/'.$long , ['connect_timeout' => 10 , 'verify' => false , 'http_errors' => false] );
-		$data = json_decode((string)$response->getBody());
+
+		$data = json_decode(stripslashes((string)$response->getBody()));
+
 		}
 		catch (GuzzleHttp\Exception\RequestException $e) {
 			var_dump($e->getMessage());exit;

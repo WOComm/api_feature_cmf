@@ -50,7 +50,7 @@ Flight::route('PUT /cmf/admin/property/change/channel', function()
 		"data"=>array()
 		);
 			
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	
 	
 	

@@ -29,7 +29,7 @@ Flight::route('PUT /cmf/reservations/cancel', function()
 	
 	$session_id = jomres_cmsspecific_getsessionid();
 
-	$reservation_ids = json_decode($_PUT['reservation_ids']);
+	$reservation_ids = json_decode(stripslashes($_PUT['reservation_ids']));
 	
 	if ($reservation_ids == false ) {
 		Flight::halt(204, "Invalid reservation data passed");
@@ -48,7 +48,7 @@ Flight::route('PUT /cmf/reservations/cancel', function()
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 			
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 
 	if ( !isset($response->data->response) || empty($response->data->response) ) { // Critical error
 		Flight::halt(204, "Cannot determine manager's properties.");

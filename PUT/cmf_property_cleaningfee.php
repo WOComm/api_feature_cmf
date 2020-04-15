@@ -57,7 +57,7 @@ Flight::route('PUT /cmf/property/cleaningfee', function()
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	if ( isset ($response->data->response)) {
 		if (!empty($response->data->response)) {
 			foreach ($response->data->response as $extra ) {
@@ -69,7 +69,7 @@ Flight::route('PUT /cmf/property/cleaningfee', function()
 					"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 					);
 				
-				$response = json_decode($call_self->call($elements));
+				$response = json_decode(stripslashes($call_self->call($elements)));
 				// Todo add a check for success
 				}
 			}
@@ -85,7 +85,7 @@ Flight::route('PUT /cmf/property/cleaningfee', function()
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	
 	if ( !isset ($response->data->response)) {
 		Flight::halt(204, "Cannot determine tax rates for site");
@@ -130,7 +130,7 @@ Flight::route('PUT /cmf/property/cleaningfee', function()
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	
 	$result = false;
 	if ( isset($response->data->response->extra_id) && (int)$response->data->response->extra_id > 0 ) {

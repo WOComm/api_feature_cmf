@@ -23,7 +23,7 @@ Flight::route('POST /cmf/echo/', function()
 	{
 	validate_scope::validate('channel_management');
 	
-	$echo = json_decode($_POST['data']);
+	$echo = json_decode(stripslashes($_POST['data']));
 	
 	Flight::json( $response_name = "response" , $echo );
 	});

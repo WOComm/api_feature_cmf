@@ -29,7 +29,7 @@ Flight::route('PUT /cmf/property/rooms', function()
 	cmf_utilities::validate_channel_for_user();  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
 
  	$property_uid			= (int)$_PUT['property_uid'];
-	$rooms					= json_decode($_PUT['rooms']);
+	$rooms					= json_decode(stripslashes($_PUT['rooms']));
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
 	

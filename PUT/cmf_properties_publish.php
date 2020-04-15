@@ -36,7 +36,7 @@ Flight::route('PUT /cmf/properties/publish', function()
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 	
-	$properties_statuses = json_decode($call_self->call($elements));
+	$properties_statuses = json_decode(stripslashes($call_self->call($elements)));
 
 	$responses = array();
 	if ( isset($properties_statuses->data->response) && !empty($properties_statuses->data->response) ) {

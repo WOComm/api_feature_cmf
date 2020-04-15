@@ -37,7 +37,7 @@ Flight::route('PUT /cmf/admin/channel/change/owner', function()
 		"data"=>array()
 		);
 			
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	
 	if (empty($response->data->response)) {
 		Flight::halt(204, "No managers in system.");
@@ -58,7 +58,7 @@ Flight::route('PUT /cmf/admin/channel/change/owner', function()
 		"data"=>array()
 		);
 			
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 	
 	$channels = (array)$response->data->response;
 	

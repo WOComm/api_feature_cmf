@@ -28,7 +28,7 @@ Flight::route('PUT /cmf/property/minstays', function()
 	cmf_utilities::validate_channel_for_user();  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
 
 	$property_uid			= (int)$_PUT['property_uid'];
-	$date_sets				= json_decode($_PUT['minstays']);
+	$date_sets				= json_decode(stripslashes($_PUT['minstays']));
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
 	

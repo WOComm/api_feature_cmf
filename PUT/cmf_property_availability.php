@@ -28,7 +28,7 @@ Flight::route('PUT /cmf/property/availability', function()
 	cmf_utilities::validate_channel_for_user();  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
 
 	$property_uid			= (int)$_PUT['property_uid'];
-	$date_sets				= json_decode($_PUT['availability']);
+	$date_sets				= json_decode(stripslashes($_PUT['availability']));
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
 	
@@ -51,7 +51,7 @@ Flight::route('PUT /cmf/property/availability', function()
 		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 		);
 			
-	$response = json_decode($call_self->call($elements));
+	$response = json_decode(stripslashes($call_self->call($elements)));
 
 	$black_bookings_contract_uids = array();
 	if (isset($response->data->response) && !empty($response->data->response->blackbooking_ids)) {
@@ -139,7 +139,7 @@ Flight::route('PUT /cmf/property/availability', function()
 						"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 						);
 			
-					$deleted_blackbooking_response = json_decode($call_self->call($elements));
+					$deleted_blackbooking_response = json_decode(stripslashes($call_self->call($elements)));
 					
 					$grouped_dates = cmf_utilities::build_date_sets($refactor['dates_not_in_set_and_need_to_be_rebooked']);
 					
@@ -158,7 +158,7 @@ Flight::route('PUT /cmf/property/availability', function()
 								"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 								);
 				
-							$black_booking_responses[] = json_decode($call_self->call($elements));
+							$black_booking_responses[] = json_decode(stripslashes($call_self->call($elements)));
 						}
 					}
 				}
@@ -209,7 +209,7 @@ Flight::route('PUT /cmf/property/availability', function()
 							"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
 							);
 							
-						$black_booking_responses[] = json_decode($call_self->call($elements)); 
+						$black_booking_responses[] = json_decode(stripslashes($call_self->call($elements)));
 					}
 				}
 				$response = array ( "success" => true );

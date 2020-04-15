@@ -33,7 +33,7 @@ Flight::route('POST /cmf/property', function()
 	$ptype_id			= (int)filter_var( $_POST['ptype_id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
 	$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
-	
+
 	$siteConfig = jomres_singleton_abstract::getInstance('jomres_config_site_singleton');
 	$jrConfig = $siteConfig->get();
 	

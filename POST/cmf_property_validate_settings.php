@@ -26,7 +26,7 @@ Flight::route('POST /cmf/property/validate/settings/keys', function()
 	
 	cmf_utilities::validate_channel_for_user();  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
 	
-	$params		= json_decode($_POST['params']);
+	$params		= json_decode(stripslashes($_POST['params']));
 
 	$valid = true;
 	$invalid_keys = array();
