@@ -110,6 +110,7 @@ Flight::route('GET /cmf/property/booking/@property_uid/@contract_uid', function(
 			foreach ( $room_bookings as $room ) {
 				$booked_rooms[] = $room->room_uid;
 			}
+			$booked_rooms = array_unique($booked_rooms);
 
 			foreach ( $current_property_details->rooms_by_type as $room_type_id=>$room_type ) {
 				foreach ($booked_rooms as $room_uid ) {
