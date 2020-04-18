@@ -208,9 +208,9 @@ class cmf_utilities
 		
 		$siteConfig = jomres_singleton_abstract::getInstance('jomres_config_site_singleton');
 		$jrConfig = $siteConfig->get();
-/*		if ($jrConfig['development_production'] == 'development') { // If we are in development mode, we don't want to use caching
+		if ($jrConfig['development_production'] == 'development') { // If we are in development mode, we don't want to use caching
 			return;
-		}*/
+		}
 
 		if (!$general_data ) {
 			$temp_path = JOMRES_TEMP_ABSPATH."cmf_rest_api";
