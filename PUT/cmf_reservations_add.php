@@ -35,8 +35,8 @@ Flight::route('PUT /cmf/reservations/add', function()
 	$tmpBookingHandler = jomres_singleton_abstract::getInstance('jomres_temp_booking_handler');
 	$tmpBookingHandler->initBookingSession( $session_id );
 
-	$reservations = json_decode(stripslashes($_PUT['reservations']));
-	
+	$reservations = json_decode($_PUT['reservations']); // Removed stripslashes
+
 	if ($reservations == false ) {
 		Flight::halt(204, "Invalid reservation data passed");
 	}
@@ -44,38 +44,38 @@ Flight::route('PUT /cmf/reservations/add', function()
 	if ( empty($reservations->reservations) ) {
 		Flight::halt(204, "No reservation data passed");
 	}
-	
+
 	$call_self = new call_self( );
 	
 	$elements = array(
 		"method"=>"GET",
 		"request"=>"cmf/properties/ids",
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+		"headers" => array (
+			Flight::get('channel_header' ).": ".Flight::get('channel_name'),
+			"X-JOMRES-proxy_id: ".Flight::get('user_id')
+			)
 		);
-			
-	$response = json_decode(stripslashes($call_self->call($elements)));
 
-	if ( !isset($response->data->response) || empty($response->data->response) ) { // Critical error
+	$properties_response = json_decode(stripslashes($call_self->call($elements)));
+
+	if ( !isset($properties_response->data->response) || empty($properties_response->data->response) ) { // Critical error
 		Flight::halt(204, "Cannot determine manager's properties.");
 	}
 		
 	// We will collect the manager's property uids to ensure that the client can book them all
 	$manager_property_uids = array();
-	foreach ($response->data->response as $property) {
+	foreach ($properties_response->data->response as $property) {
 		if ( isset($property->local_property_uid) && (int)$property->local_property_uid > 0 ) {
 			$manager_property_uids[] = (int)$property->local_property_uid ;
 		}
 	}
 	
 	$response = array ( "successful_bookings" => array() , "unsuccessful_bookings" => array() );
-	
 
-	$response = array();
-	
 	foreach ( $reservations->reservations as $reservation ) { // A set of one or more bookings
 		$booking							= new stdClass();
-		
+
 		$booking->remote_reservation_id		= filter_var($reservation->remote_reservation_id, FILTER_SANITIZE_SPECIAL_CHARS);
 		$booking->comments					= filter_var($reservation->comments, FILTER_SANITIZE_SPECIAL_CHARS);
 		$booking->referrer					= filter_var($reservation->referrer, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -106,13 +106,14 @@ Flight::route('PUT /cmf/reservations/add', function()
 			}
 		
 		$booking->booking_prices_include_tax	= true;
-		
+
 		if (empty($reservation->stay_infos)) {
 			Flight::halt(204, "No stays passed");
 		}
 		
 		$dates_valid = true;
 		$stays = array();
+
 		foreach ($reservation->stay_infos as $stay) {
 			if ( !cmf_utilities::validate_date($stay->date_from) ) {
 				$dates_valid = false;
@@ -153,14 +154,25 @@ Flight::route('PUT /cmf/reservations/add', function()
 				$booking->room_type_id	= (int)$stay->room_type_id;
 				$booking->room_type_name= filter_var($stay->room_type_name, FILTER_SANITIZE_SPECIAL_CHARS);
 				$booking->guest_number	= (int)$stay->guest_number;
-				
-				$insert = cmf_utilities::add_booking($booking);
-				$response[] = $insert;
+
+				try {
+					$insert = cmf_utilities::add_booking($booking);
+
+					if ( isset($insert->success) && $insert->success === true ) {
+						$response['successful_bookings'][$reservation->remote_reservation_id] = $insert;
+					} else {
+						$response['unsuccessful_bookings'][$reservation->remote_reservation_id] = $insert;
+					}
+
+				} catch (Exception $e) {
+					logging::log_message( "Failed to insert booking : ".$e->getMessage() , 'CHANNEL_MANAGEMENT_FRAMEWORK', 'ERROR' , '' );
+					return;
+				}
 			}
 		}
 	}
-	
-	$tmpBookingHandler->session_jomres_start();  // The booking insert class will reset the temp data, including mos_userid If we don't restart the session here, subesequent sessions will fail.
+
+	$tmpBookingHandler->session_jomres_start();  // The booking insert class will reset the temp data, including mos_userid If we don't restart the session here, subsequent sessions will fail.
 	
 	Flight::json( $response_name = "response" , $response );
 	});

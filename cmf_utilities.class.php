@@ -344,7 +344,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/cleaningfee/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
 				);
 			
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -360,7 +360,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/securitydeposit/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
 				);
 			
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -654,7 +654,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/securitydeposit/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
 				);
 			
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -677,7 +677,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/cleaningfee/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
 				);
 					
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -699,7 +699,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/deposit/type/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
 				);
 			
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -775,7 +775,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/list/booking/statuses/",
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
 				);
 			
 			$booking_statuses = json_decode(stripslashes($call_self->call($elements)));
@@ -1003,7 +1003,7 @@ class cmf_utilities
 		if (!empty($bklist)) { // The booking has already been imported into the system previously, we'll return
 			 (object) array( "success" => false , "message" => "Booking number already exists");
 		}
-		
+
 		$current_property_details = jomres_singleton_abstract::getInstance( 'basic_property_details' );
 		$current_property_details->gather_data( $booking->property_uid );
 
@@ -1022,7 +1022,7 @@ class cmf_utilities
 		
 		jr_import( 'jomres_generic_booking_insert' );
 		$bkg = new jomres_generic_booking_insert();
-		
+
 		$bkg->guest_details['firstname']	= $booking->guest_name;
 		$bkg->guest_details['surname']		= $booking->guest_surname;
 		$bkg->guest_details['house']		= "";
@@ -1059,7 +1059,7 @@ class cmf_utilities
 			$bkg->booking_details['deposit_required']		= $booking->already_paid;
 		else
 			$bkg->booking_details['deposit_required']		= $bkg->booking_details['contract_total'];
-		
+
 		$jrportal_taxrate = jomres_singleton_abstract::getInstance( 'jrportal_taxrate' );
 		$cfgcode = $mrConfig[ 'accommodation_tax_code' ];
 		$accommodation_tax_rate = (float) $jrportal_taxrate->taxrates[ $cfgcode ][ 'rate' ];
@@ -1091,16 +1091,17 @@ class cmf_utilities
 		
 		// Could be problematic, as this endpoint finds only those rooms where the available rooms returned are all those continuously available for the entire span of the booking. Not a problem if this is an SRP, but if it's an MRP it can be more difficult
 		$call_self = new call_self( );
-	
+
 		$elements = array(
 			"method"=>"GET",
 			"request"=>"cmf/property/available/rooms/".$booking->property_uid."/".$booking->date_from."/".$booking->date_to,
 			"data"=>array(),
-			"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+			"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') ),
+
 			);
 				
 		$response = json_decode(stripslashes($call_self->call($elements)));
-	
+
 		if ( isset($response->data->response) && !empty($response->data->response) ) {
 			foreach ($response->data->response as $available_rooms) {
 				$filtered_rooms = array();
@@ -1156,18 +1157,18 @@ class cmf_utilities
 
 				$bkg->booking_details['requestedRoom']				 .= $first_key."^0,"; //it needs to have the ^tariff_uid too 
 				$bkg->booking_details['requestedRoom'] = substr( $bkg->booking_details['requestedRoom'], 0, strlen( $bkg->booking_details['requestedRoom'] ) - 1 );
-				
+
 				//Finally let`s insert the new booking
 				try {
 					$MiniComponents =jomres_getSingleton('mcHandler');
 					$tmpBookingHandler = jomres_singleton_abstract::getInstance('jomres_temp_booking_handler');
 					$tmpBookingHandler->updateBookingField('cart_payment' , false ) ;
-					
+
 					$insert_result = $bkg->create_booking();
 
-					if ($MiniComponents->miniComponentData["03020"]["insertbooking"]["insertSuccessful"] == true ) {
+					if ( isset($MiniComponents->miniComponentData["03020"]["insertbooking"]["insertSuccessful"]) && $MiniComponents->miniComponentData["03020"]["insertbooking"]["insertSuccessful"] == true ) {
 						$contract_uid = $MiniComponents->miniComponentData["03020"]["insertbooking"]["contract_uid"] ;
-						
+
 						$elements = array(
 							"method"=>"PUT",
 							"request"=>"cmf/property/booking/link/",
@@ -1176,11 +1177,11 @@ class cmf_utilities
 								"remote_booking_id" => $booking->remote_reservation_id,
 								"local_booking_id" => $contract_uid
 								),
-							"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+							"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
 							);
 
 						$link_response = json_decode(stripslashes($call_self->call($elements)));
-						
+
 						if ( isset($link_response->data->response->link_id) && $link_response->data->response->link_id > 0 ) {
 							$reply = (object) array( 
 								"link_id" => $link_response->data->response->link_id , 
@@ -1191,13 +1192,14 @@ class cmf_utilities
 								"property_name" => $current_property_details->property_name
 								);
 						}
+
 						return (object) array( "success" => true , "link" => $reply );
 					} else {
 						return (object) array( "success" => false , "message" => "Could not create booking");
 					}
 				}
 				catch (Exception $e) {
-					logging::log_message( "Failed to insert booking, most likely there are more rooms in the Channel manager than there are in Jomres. ".$e->getMessage() , 'Beds24v2', 'ERROR' , '' );
+					logging::log_message( "Failed to insert booking, most likely there are more rooms in the Channel manager than there are in Jomres. ".$e->getMessage() , 'CHANNEL_MANAGEMENT_FRAMEWORK', 'ERROR' , '' );
 					return;
 				}
 		
