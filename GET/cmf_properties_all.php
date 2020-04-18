@@ -37,14 +37,34 @@ Flight::route('GET /cmf/properties/all', function()
 
 		if (!empty($all_properties)) {
 			foreach ($all_properties as $property_uid => $property ) {
+				$mrConfig = getPropertySpecificSettings($property_uid);
+
+				$property_name			= '';
+				$property_town			= '';
+				$property_region		= '';
+				$property_country		= '';
+				$property_type_title	= '';
+
+				if (!isset($mrConfig['api_privacy_off'])) {
+					$mrConfig['api_privacy_off'] = 0;
+				}
+
+				if ( $mrConfig['api_privacy_off'] == 1 ) {
+					$property_name			= str_replace('&#39;' , "'", $property['property_name']);
+					$property_town			= str_replace('&#39;' , "'", $property['property_town']);
+					$property_region		= str_replace('&#39;' , "'", $property['property_region']);
+					$property_country		= str_replace('&#39;' , "'", $property['property_country']);
+					$property_type_title	= str_replace('&#39;' , "'", $property['property_type_title']);
+				}
 
 				$properties[] = array (
 					"property_id" => $property_uid ,
-					"property_name" => str_replace('&#39;' , "'", $property['property_name']),
-					"property_town" => str_replace('&#39;' , "'", $property['property_town']),
-					"property_region" => str_replace('&#39;' , "'", $property['property_region']),
-					"property_country" => str_replace('&#39;' , "'", $property['property_country']),
-					"property_type_title" => str_replace('&#39;' , "'", $property['property_type_title']),
+					"property_name" => $property_name,
+					"property_town" => $property_town,
+					"property_region" => $property_region,
+					"property_country" => $property_country,
+					"property_type_title" => $property_type_title,
+					"api_privacy_off" =>  $mrConfig['api_privacy_off'],
 				) ;
 			}
 		}
