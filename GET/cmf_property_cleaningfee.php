@@ -36,7 +36,7 @@ Flight::route('GET /cmf/property/cleaningfee/@id', function( $property_uid )
 		"method"=>"GET",
 		"request"=>"cmf/property/list/extras/".$property_uid,
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
 		);
 	
 	$cleaning_fee = 0.0;
