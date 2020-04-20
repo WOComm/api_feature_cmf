@@ -40,7 +40,7 @@ Flight::route('DELETE /cmf/property/local/@id', function($property_uid)
 			$MiniComponents->specificEvent('06002', 'delete_property', array( "sure" => true , "property_uid" => $property_uid , "thisJRUser" => $thisJRUser  ));
 		}
 		catch (Exception $e) {
-			logging::log_message('Failed to delete property, response message '.$e->getMessage(), 'CHANNELMANAGEMENT_FRAMEWORK', 'WARNING');
+			logging::log_message('Failed to delete property, response message '.$e->getMessage(), 'CMF', 'WARNING');
 		}
 
 		
