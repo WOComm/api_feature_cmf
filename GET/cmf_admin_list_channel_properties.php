@@ -32,7 +32,7 @@ Flight::route('GET /cmf/admin/list/channel/properties/@channel_id', function( $c
 		);
 			
 	$response = json_decode(stripslashes($call_self->call($elements)));
-	
+
 	if (empty($response->data->response)) {
 		Flight::halt(204, "No managers in system.");
 	}
@@ -56,15 +56,18 @@ Flight::route('GET /cmf/admin/list/channel/properties/@channel_id', function( $c
 		foreach ($result as $channel) {
 			$id = $channel->property_uid;
 			$property_uids[]= $channel->property_uid ;
+			if ( !isset($property_managers[$channel->cms_user_id])) {
+				$property_managers[$channel->cms_user_id]['username'] = "MANAGER NO LONGER EXISTS";
+			}
 			$channel_properties[$id] = array (
-				"id"						=> $channel->id , 
+				"id"						=> $channel->id ,
 				"channel_id"				=> $channel->channel_id ,
 				"cms_user_name"				=> $property_managers[$channel->cms_user_id]['username'] ,
 				"cms_user_id"				=> $channel->cms_user_id ,
-				"property_uid"				=> $channel->property_uid , 
+				"property_uid"				=> $channel->property_uid ,
 				"remote_property_uid"		=> $channel->remote_property_uid,
 				"remote_data"				=> unserialize($channel->remote_data)
-				);
+			);
 		}
 		$current_property_details = jomres_singleton_abstract::getInstance('basic_property_details');
 		$property_names = $current_property_details->get_property_name_multi($property_uids);
