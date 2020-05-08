@@ -56,6 +56,9 @@ Flight::route('GET /cmf/admin/list/channels', function()
 	if (!empty($result)) {
 		foreach ($result as $channel) {
 			$id = $channel->id;
+			if ( !isset($property_managers[$channel->cms_user_id])) {
+				$property_managers[$channel->cms_user_id]['username'] = "MANAGER NO LONGER EXISTS";
+			}
 
 			$channels[$id] = array (
 				"id"						=> $channel->id , 

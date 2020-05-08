@@ -44,23 +44,31 @@ class cmf_utilities
 	public static function validate_channel_for_user( $channel_name = '' )
 	{
 		$all_headers = getallheaders();
-		
-		if (isset($all_headers['X-JOMRES-channel-name'])) {
-			$channel_name = filter_var($all_headers['X-JOMRES-channel-name'], FILTER_SANITIZE_SPECIAL_CHARS);
+
+		if (!empty($all_headers)) {
+			foreach ($all_headers as $key => $val ) {
+				$new_index = strtoupper($key);
+				unset($all_headers[$key]);
+				$all_headers[$new_index] = $val;
+			}
+		}
+
+		if (isset($all_headers['X-JOMRES-CHANNEL-NAME'])) {
+			$channel_name = filter_var($all_headers['X-JOMRES-CHANNEL-NAME'], FILTER_SANITIZE_SPECIAL_CHARS);
 		} else {
 			Flight::halt(204, "Channel not set");
 		}
-		
-		
+
+
 		if (!isset($channel_name) ||  trim($channel_name) == '' ) {
 			Flight::halt(204, "Channel not set");
 		}
 
-		if ( isset($all_headers['X-JOMRES-proxy_id']) && (int)$all_headers['X-JOMRES-proxy_id'] > 0 ) {  // Only the "system" OAuth client can send proxy ids. "system" is used by plugins in Jomres to call the cmf rest api functionality, however when working on properties, we need to actually hand over the real property manager's cms id. In essence, the "system" client is only used to get valid tokens and to call the endpoint, from that point onwards, the manager's id is used.
+		if ( isset($all_headers['X-JOMRES-PROXY_ID']) && (int)$all_headers['X-JOMRES-PROXY_ID'] > 0 ) {  // Only the "system" OAuth client can send proxy ids. "system" is used by plugins in Jomres to call the cmf rest api functionality, however when working on properties, we need to actually hand over the real property manager's cms id. In essence, the "system" client is only used to get valid tokens and to call the endpoint, from that point onwards, the manager's id is used.
 			if ( Flight::get('scopes') == array("*") ) {
-				Flight::set('user_id' , (int)$all_headers['X-JOMRES-proxy_id'] );
+				Flight::set('user_id' , (int)$all_headers['X-JOMRES-PROXY_ID'] );
 				$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
-				$thisJRUser->init_user( (int)$all_headers['X-JOMRES-proxy_id'] );
+				$thisJRUser->init_user( (int)$all_headers['X-JOMRES-PROXY_ID'] );
 			} else {
 				Flight::halt(204, "You cannot use proxy ids.");
 			}
@@ -75,7 +83,7 @@ class cmf_utilities
 			Flight::halt(204, "User does not have access to this channel ".$channel_name);
 		}
 
-		Flight::set('channel_header' , 'X-JOMRES-channel-name' );
+		Flight::set('channel_header' , 'X-JOMRES-CHANNEL-NAME' );
 		Flight::set('channel_name' , $channel_name );
 		Flight::set('channel_id' , (int)$result );
 	}
