@@ -29,7 +29,7 @@ Flight::route('GET /cmf/property/list/prices/@property_uid', function( $property
 
 	$property_uid			= (int)$property_uid;
 
-	cmf_utilities::validate_property_uid_for_user($property_uid);
+	//cmf_utilities::validate_property_uid_for_user($property_uid);
 	
 	cmf_utilities::cache_read($property_uid);
 	
@@ -47,8 +47,7 @@ Flight::route('GET /cmf/property/list/prices/@property_uid', function( $property
 	// Figure out mindays for tariffs in range
 	foreach ($basic_rate_details->multi_query_rates[$property_uid] as $tariff_type) {
 		foreach ($tariff_type as $tariff_set) {
-			
-			foreach ($tariff_set as $tariff) {
+				foreach ($tariff_set as $tariff) {
 
 				$valid_from = str_replace("/","-",  $tariff['validfrom']);
 				$valid_to = str_replace("/","-",  $tariff['validto']);
@@ -71,7 +70,7 @@ Flight::route('GET /cmf/property/list/prices/@property_uid', function( $property
 				}
 				
 				if ($room_rate > 0 ) {
-					$found_tariffs["tariff_sets"][$tariff_type_id][] = array ( "rate_title" => $tariff["rate_title"] , "rate_per_night" => $room_rate , "min_days" => $tariff['mindays']  , "max_days" => $tariff['maxdays'] , "minpeople" => $tariff['minpeople'] , "maxpeople" => $tariff['maxpeople'] , "tarifftype_id" => $tariff_type_id , "per_person_per_night" => $per_person_per_night , "number_of_days" => $number_of_days_tariff_spans , "date_range" => array ("start" => $valid_from, "end" => $valid_to ) , "dates" => array_keys ($tariff_date_ranges) );
+					$found_tariffs["tariff_sets"][$tariff_type_id][] = array ( "rate_title" => $tariff["rate_title"] , "rate_per_night" => $room_rate , "min_days" => $tariff['mindays']  , "max_days" => $tariff['maxdays'] , "minpeople" => $tariff['minpeople'] , "maxpeople" => $tariff['maxpeople'] , "tarifftype_id" => $tariff_type_id , "room_type_id" => $tariff["roomclass_uid"] , "per_person_per_night" => $per_person_per_night , "number_of_days" => $number_of_days_tariff_spans , "date_range" => array ("start" => $valid_from, "end" => $valid_to ) , "dates" => array_keys ($tariff_date_ranges) );
 				}
 				
 			}

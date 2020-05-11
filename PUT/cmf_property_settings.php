@@ -33,36 +33,25 @@ Flight::route('PUT /cmf/property/settings', function()
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
 	
-	$invalid_keys = array();
-	$mrConfig = getPropertySpecificSettings(0);
-
-	foreach ($params as $key=>$val) {
-		if (!array_key_exists($key , $mrConfig )) {
-			$invalid_keys[] = $key;
-		}
-	}
-
 	$inserted_settings = array();
 	$updated_settings = array();
 	
 	foreach ($params as $k=>$v) {
-		if (!in_array($k , $invalid_keys ) ) {  // No need to sanitise $k, as by dint of it not being in the invalid keys array, it will be valid 
-			$v = filter_var($v, FILTER_SANITIZE_SPECIAL_CHARS);
-			$query = "SELECT uid FROM #__jomres_settings WHERE property_uid = '".(int) $property_uid."' and akey = '".$k."'";
-			$result = doSelectSql($query);
-			if (empty($result)) {
-				$query = "INSERT INTO #__jomres_settings (property_uid,akey,value) VALUES ('".(int) $property_uid."','".$k."','".$v."')";
-				$inserted_settings[$k] = $v;
-			} else {
-				$query = "UPDATE #__jomres_settings SET `value`='".$v."' WHERE property_uid = '".(int) $property_uid."' and akey = '".$k."'";
-				$updated_settings[$k] = $v;
-			}
-			doInsertSql($query, jr_gettext('_JOMRES_MR_AUDIT_EDIT_PROPERTY_SETTINGS', '_JOMRES_MR_AUDIT_EDIT_PROPERTY_SETTINGS', false) );
+		$k = filter_var($k, FILTER_SANITIZE_SPECIAL_CHARS);
+		$v = filter_var($v, FILTER_SANITIZE_SPECIAL_CHARS);
+		$query = "SELECT uid FROM #__jomres_settings WHERE property_uid = '".(int) $property_uid."' and akey = '".$k."'";
+		$result = doSelectSql($query);
+		if (empty($result)) {
+			$query = "INSERT INTO #__jomres_settings (property_uid,akey,value) VALUES ('".(int) $property_uid."','".$k."','".$v."')";
+			$inserted_settings[$k] = $v;
+		} else {
+			$query = "UPDATE #__jomres_settings SET `value`='".$v."' WHERE property_uid = '".(int) $property_uid."' and akey = '".$k."'";
+			$updated_settings[$k] = $v;
 		}
-
+		doInsertSql($query, jr_gettext('_JOMRES_MR_AUDIT_EDIT_PROPERTY_SETTINGS', '_JOMRES_MR_AUDIT_EDIT_PROPERTY_SETTINGS', false) );
 	}
 
-	Flight::json( $response_name = "response" , array ("success" => true , "inserted_settings" => $inserted_settings ,"updated_settings" => $updated_settings , "invalid_keys" => $invalid_keys ) ); 
+	Flight::json( $response_name = "response" , array ("success" => true , "inserted_settings" => $inserted_settings ,"updated_settings" => $updated_settings ) );
 	});
 	
 	
