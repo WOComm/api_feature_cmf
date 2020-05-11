@@ -70,7 +70,24 @@ Flight::route('GET /cmf/property/list/prices/@property_uid', function( $property
 				}
 				
 				if ($room_rate > 0 ) {
-					$found_tariffs["tariff_sets"][$tariff_type_id][] = array ( "rate_title" => $tariff["rate_title"] , "rate_per_night" => $room_rate , "min_days" => $tariff['mindays']  , "max_days" => $tariff['maxdays'] , "minpeople" => $tariff['minpeople'] , "maxpeople" => $tariff['maxpeople'] , "tarifftype_id" => $tariff_type_id , "room_type_id" => $tariff["roomclass_uid"] , "per_person_per_night" => $per_person_per_night , "number_of_days" => $number_of_days_tariff_spans , "date_range" => array ("start" => $valid_from, "end" => $valid_to ) , "dates" => array_keys ($tariff_date_ranges) );
+					$found_tariffs["tariff_sets"][$tariff_type_id][] = array (
+						"rate_title" =>				$tariff["rate_title"] ,
+						"rate_per_night" =>			$room_rate ,
+						"min_days" =>				$tariff['mindays']  ,
+						"max_days" =>				$tariff['maxdays'] ,
+						"minpeople" =>				$tariff['minpeople'] ,
+						"maxpeople" =>				$tariff['maxpeople'] ,
+						"tarifftype_id" =>			$tariff_type_id ,
+						"dayofweek" =>				$tariff["dayofweek"] ,
+						"ignore_pppn" =>			$tariff["ignore_pppn"] ,
+						"allow_we" =>				$tariff["allow_we"] ,
+						"weekendonly" =>			$tariff["weekendonly"] ,
+						"room_type_id" =>			$tariff["roomclass_uid"] ,
+						"per_person_per_night" =>	$per_person_per_night ,
+						"number_of_days" =>			$number_of_days_tariff_spans ,
+						"date_range" =>				array ("start" => $valid_from, "end" => $valid_to ) ,
+						"dates" =>					array_keys ($tariff_date_ranges)
+					);
 				}
 				
 			}
