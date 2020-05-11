@@ -29,7 +29,7 @@ Flight::route('GET /cmf/property/list/prices/@property_uid', function( $property
 
 	$property_uid			= (int)$property_uid;
 
-	//cmf_utilities::validate_property_uid_for_user($property_uid);
+	cmf_utilities::validate_property_uid_for_user($property_uid);
 	
 	cmf_utilities::cache_read($property_uid);
 	

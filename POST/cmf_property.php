@@ -83,9 +83,10 @@ Flight::route('POST /cmf/property', function()
 		$query = "INSERT INTO `#__jomres_channelmanagement_framework_property_uid_xref` ( `channel_id`, `property_uid`, `remote_property_uid`, `cms_user_id`, `remote_data`) VALUES ( ".Flight::get('channel_id')." , ".$jomres_properties->propertys_uid." , ".$remote_uid.", ".(int)$thisJRUser->userid." , NULL)" ;
 		doInsertSql($query);
 
-		// Finally we'll ensure that api privacy is enabled
+		// Finally we'll ensure that api privacy is enabled and managers will be prevented from administering locally
 		$settings = array();
-		$settings['api_privacy_off'] = "0";
+		$settings['api_privacy_off'] = "0";							// By default API privacy is on although channels and managers can disable it
+		$settings['allow_channel_property_local_admin'] = "0";		// Managers cannot administer properties locally, they'll be presented with the remote admin url
 
 		$elements = array(
 			"method"=>"PUT",
