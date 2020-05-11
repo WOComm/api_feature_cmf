@@ -29,7 +29,7 @@ Flight::route('PUT /cmf/property/management/url', function()
 	cmf_utilities::validate_channel_for_user();  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
 
  	$property_uid			= (int)$_PUT['property_uid'];
-	$management_url			= filter_var($_PUT['management_url'], FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED);
+	$management_url			= filter_var($_PUT['management_url'], FILTER_VALIDATE_URL );
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
 	
