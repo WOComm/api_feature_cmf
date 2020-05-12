@@ -1172,6 +1172,9 @@ class cmf_utilities
 					$tmpBookingHandler = jomres_singleton_abstract::getInstance('jomres_temp_booking_handler');
 					$tmpBookingHandler->updateBookingField('cart_payment' , false ) ;
 
+					$bkg->sendGuestEmail = false;
+					$bkg->sendHotelEmail = false;
+
 					$insert_result = $bkg->create_booking();
 
 					if ( isset($MiniComponents->miniComponentData["03020"]["insertbooking"]["insertSuccessful"]) && $MiniComponents->miniComponentData["03020"]["insertbooking"]["insertSuccessful"] == true ) {
@@ -1203,7 +1206,7 @@ class cmf_utilities
 
 						return (object) array( "success" => true , "link" => $reply );
 					} else {
-						return (object) array( "success" => false , "message" => "Could not create booking");
+						return (object) array( "success" => false , "message" => "Could not create booking ");
 					}
 				}
 				catch (Exception $e) {
