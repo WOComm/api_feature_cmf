@@ -30,9 +30,7 @@ Flight::route('GET /cmf/property/change/log/@property_uid', function( $property_
 	$property_uid			= (int)$property_uid;
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
-	
-	cmf_utilities::cache_read($property_uid);
-	
+
 	$query = 'SELECT id , property_uid , user_performing_action , channel_data , date_added , webhook_event_title ,webhook_event 
 		FROM #__jomres_webhook_events WHERE property_uid = '.$property_uid.' 
 		AND date_added BETWEEN date_sub(now(),INTERVAL 2 WEEK) AND now() 
@@ -59,9 +57,6 @@ Flight::route('GET /cmf/property/change/log/@property_uid', function( $property_
 		}
 	}
 
-	
-	cmf_utilities::cache_write( $property_uid , "response" , $events );
-	
 	Flight::json( $response_name = "response" , $events ) ;
 	});
 
