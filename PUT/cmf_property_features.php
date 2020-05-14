@@ -37,12 +37,19 @@ Flight::route('PUT /cmf/property/features', function()
 	$current_property_details->gather_data($property_uid);
 	
 	$globalPfeatures = array();
-	foreach ($current_property_details->all_property_features as $k => $v) {  // We will find feature ids that are valid for this property types
-		if ( in_array($current_property_details->ptype_id, $v['ptype_xref']) || empty($v['ptype_xref']) ) {
+	foreach ($current_property_details->all_property_features as $k => $v) {  // We will find feature ids that are valid for this property type
+		if ($k == 17 ) {
+			var_dump(( isset( $v['ptype_xref'][0]) && $v['ptype_xref'][0] == 0) ) ;	var_dump($v['abbv']);	}
+
+			if (
+				$v['ptype_xref'] == $current_property_details->ptype_id  ||
+				empty($v['ptype_xref']) ||
+				( isset( $v['ptype_xref'][0]) && $v['ptype_xref'][0] == 0)
+			) {
 			$globalPfeatures[$k] = $v['abbv'];
 		}
 	}
-	
+
 	ksort ($globalPfeatures);
 	$features = explode ( "," , $features );
 
@@ -54,8 +61,7 @@ Flight::route('PUT /cmf/property/features', function()
 			}
 		}
 	}
-	
-	
+
 	$property = cmf_utilities::get_property_object_for_update($property_uid); // This utility will return an instance of jomres_properties, because this class has a method for updating an existing property without going through the UI.
 	
 	$property->property_features				= $features_arr;
