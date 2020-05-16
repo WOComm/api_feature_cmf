@@ -14,7 +14,7 @@ defined( '_JOMRES_INITCHECK' ) or die( '' );
 
 /*
 
-SRPs only, set dates available/not available
+Send remote booking numbers, find local contract uids and cancel those bookings
 
 */
 
@@ -54,7 +54,6 @@ Flight::route('PUT /cmf/reservations/cancel', function()
 		Flight::halt(204, "Cannot determine manager's properties.");
 	}
 
-	// We will collect the manager's property uids to ensure that the client can book them all
 	$manager_property_uids = array();
 	foreach ($response->data->response as $property) {
 		if ( isset($property->local_property_uid) && (int)$property->local_property_uid > 0 ) {
