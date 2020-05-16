@@ -4,7 +4,7 @@
 * @author  John m_majma@yahoo.com
 * @version Jomres 9
 * @package Jomres
-* @copyright 2017
+* @copyright	2005-2020 Vince Wooll
 * Jomres (tm) PHP files are released under both MIT and GPL2 licenses. This means that you can choose the license that best suits your project.
 **/
 

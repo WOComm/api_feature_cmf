@@ -4,7 +4,7 @@
 * @author  John m_majma@yahoo.com
 * @version Jomres 9 
 * @package Jomres
-* @copyright 2017
+* @copyright	2005-2020 Vince Wooll
 * Jomres (tm) PHP files are released under both MIT and GPL2 licenses. This means that you can choose the license that best suits your project.
 **/
 
@@ -41,9 +41,9 @@ Flight::route('PUT /cmf/property/unpublish', function()
 		);
 			
 	$property_status = json_decode(stripslashes($call_self->call($elements)));
-			
+
 	$response = false;
-	if ( $property_status->data->response->status_code == "1" ) {
+	if ( $property_status->data->response->status_code == "1" ||  $property_status->data->response->status_code == "2" ) {
 		$jomres_properties = jomres_singleton_abstract::getInstance('jomres_properties');
 		$jomres_properties->propertys_uid = $property_uid;
 		$jomres_properties->unpublish_property();
