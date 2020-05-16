@@ -55,6 +55,9 @@ Flight::route('DELETE /cmf/property/local/@id', function($property_uid)
 		$query = "DELETE FROM #__channelmanagement_framework_changelog_queue_items WHERE `property_uid` = ".(int) $property_uid;
 		doInsertSql($query);
 
+		$query = "DELETE FROM #__jomres_channelmanagement_framework_bookings_xref WHERE `property_uid` =". (int) $property_uid;
+		$success = doInsertSql($query);
+
 	} else {
 		$response = false;
 	}
