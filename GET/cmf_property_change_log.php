@@ -34,7 +34,7 @@ Flight::route('GET /cmf/property/change/log/@property_uid', function( $property_
 	$query = 'SELECT id , property_uid , user_performing_action , channel_data , date_added , webhook_event_title ,webhook_event 
 		FROM #__jomres_webhook_events WHERE property_uid = '.$property_uid.' 
 		AND date_added BETWEEN date_sub(now(),INTERVAL 2 WEEK) AND now() 
-		ORDER BY id DESC';
+		ORDER BY id ASC';
 	$events_list = doSelectSql($query);
 
 	$events = array();
