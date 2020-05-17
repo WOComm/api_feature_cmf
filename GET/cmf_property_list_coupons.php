@@ -59,21 +59,7 @@ Flight::route('GET /cmf/property/list/coupons/@property_uid', function( $propert
 
 		$couponlist = array();
 		while ($row = $stmt->fetch()) {
-			$ispercentage=jr_gettext('_JOMRES_COM_MR_NO','_JOMRES_COM_MR_NO',false);
-			if ($row['is_percentage'])
-				$ispercentage=jr_gettext('_JOMRES_COM_MR_YES','_JOMRES_COM_MR_YES',false);
 
-			$roomonly=jr_gettext('_JOMRES_COM_MR_NO','_JOMRES_COM_MR_NO',false);
-			if ($row['rooms_only'])
-				$roomonly=jr_gettext('_JOMRES_COM_MR_YES','_JOMRES_COM_MR_YES',false);
-
-			foreach ($guests_arrray as $coupon) {
-				$guest_name="";
-				if ( (int)$coupon['guest_uid'] > 0  && (int)$row['guest_uid'] == (int)$coupon['guest_uid'] ) {
-					$guest_name=$coupon['firstname']. " ".$coupon['surname'];
-					break;
-				}
-			}
 
 			$couponlist[] = array (
 				"coupon_id"			=> $row['coupon_id'],
@@ -81,11 +67,11 @@ Flight::route('GET /cmf/property/list/coupons/@property_uid', function( $propert
 				"valid_from" 		=> $row['valid_from'],
 				"valid_to" 			=> $row['valid_to'],
 				"amount" 			=> $row['amount'],
-				"ispercentage" 		=> $ispercentage,
-				"roomonly"			=> $roomonly,
+				"ispercentage" 		=> $row['is_percentage'],
+				"roomonly"			=> $row['rooms_only'],
 				"booking_valid_from" => $row['booking_valid_from'],
 				"booking_valid_to" 	=> $row['booking_valid_to'],
-				"guest_name" 		=> $guest_name
+				"guest_id" 			=> $row['guest_uid']
 			);
 		}
 
