@@ -463,8 +463,10 @@ class cmf_utilities
 		
 		$query = 'SELECT `remote_data` FROM `#__jomres_channelmanagement_framework_property_uid_xref` WHERE property_uid = '.$property_uid.' LIMIT 1';
 		$data = doSelectSql($query,1);
+
+		// Need to base64 encode/decode this data because it's easy to corrupt serialized data when the allowed data is arbitrary
 		if ( $data != '' && $data != false ) {
-			$decoded = unserialize($data);
+			$decoded = unserialize(base64_decode($data));
 			if ($decoded != false ) {
 				return $decoded;
 			}
@@ -479,7 +481,7 @@ class cmf_utilities
 	public static function set_property_remote_data ( $property ) 
 	{
 		if (isset($property->remote_data) || !is_null($property->remote_data) ) {
-			$query = 'UPDATE `#__jomres_channelmanagement_framework_property_uid_xref` SET `remote_data` = \''.serialize($property->remote_data).'\' WHERE property_uid = '.$property->propertys_uid.' LIMIT 1';
+			$query = 'UPDATE `#__jomres_channelmanagement_framework_property_uid_xref` SET `remote_data` = \''.base64_encode(serialize($property->remote_data)).'\' WHERE property_uid = '.$property->propertys_uid.' LIMIT 1';
 			doInsertSql($query);
 		}
 	}
