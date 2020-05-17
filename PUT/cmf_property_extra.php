@@ -31,7 +31,8 @@ Flight::route('PUT /cmf/property/extra', function()
 	$property_uid			= (int)$_PUT['property_uid'];
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
-	
+
+	$extra_id					= (int)$_PUT['extra_id'];
 	$name						= filter_var($_PUT['name'], FILTER_SANITIZE_SPECIAL_CHARS) ;
 	$description				= filter_var($_PUT['description'], FILTER_SANITIZE_SPECIAL_CHARS) ;
 	$price						= convert_entered_price_into_safe_float($_PUT['price']);
@@ -85,46 +86,75 @@ Flight::route('PUT /cmf/property/extra', function()
 	if (!isset($jrportal_taxrate->taxrates[$tax_rate])) {
 		Flight::halt(204, "Tax rate is not valid");
 	} */
-	
-	$query="INSERT INTO #__jomres_extras (
-		`name`,
-		`desc`,
-		`price`,
-		`auto_select`,
-		`tax_rate`,
-		`maxquantity`,
-		`published`,
-		`property_uid`,
-		`validfrom`,
-		`validto` , 
-		`include_in_property_lists` ,
-		`limited_to_room_type` 
-		)
-		VALUES
-		(
-		'".$name."',
-		'".$description."',
-		 ".$price.",
-		 ".$auto_select.",
-		 ".$tax_rate.", 
-		 ".$maxquantity.",
-		 ".$published.",
-		 ".$property_uid.",
-		'".$validfrom." 00:00:00' ,
-		'".$validto." 00:00:00' , 
-		".$include_in_property_lists." , 
-		".$limited_to_room_type." 
-		)";
-	$uid=doInsertSql($query);
-	
-	if ($uid == false || $uid == 0 ) {
-		Flight::halt(204, "Failed to add extra");
-	}
-	
-	$query="INSERT INTO #__jomcomp_extrasmodels_models ( `extra_id` , `model` , `params` , `force` , `property_uid` ) VALUES ( ".$uid.", ".$model_model." ,".$model_params.", ".$model_force.", ".$property_uid." )";
 
-	doInsertSql($query);
-	
+		if ($extra_id == 0 ) {
+			$query="INSERT INTO #__jomres_extras (
+				`name`,
+				`desc`,
+				`price`,
+				`auto_select`,
+				`tax_rate`,
+				`maxquantity`,
+				`published`,
+				`property_uid`,
+				`validfrom`,
+				`validto` , 
+				`include_in_property_lists` ,
+				`limited_to_room_type` 
+				)
+				VALUES
+				(
+				'".$name."',
+				'".$description."',
+				 ".$price.",
+				 ".$auto_select.",
+				 ".$tax_rate.", 
+				 ".$maxquantity.",
+				 ".$published.",
+				 ".$property_uid.",
+				'".$validfrom." 00:00:00' ,
+				'".$validto." 00:00:00' , 
+				".$include_in_property_lists." , 
+				".$limited_to_room_type." 
+				)";
+			$uid=doInsertSql($query);
+
+			if ($uid == false || $uid == 0 ) {
+				Flight::halt(204, "Failed to add extra");
+			}
+
+			$query="INSERT INTO #__jomcomp_extrasmodels_models ( `extra_id` , `model` , `params` , `force` , `property_uid` ) VALUES ( ".$uid.", ".$model_model." ,".$model_params.", ".$model_force.", ".$property_uid." )";
+
+			doInsertSql($query);
+		} else {
+			$query="UPDATE #__jomres_extras SET
+				`name` = '".$name."',
+				`desc` = '".$description."',
+				`price` =  ".$price.",
+				`auto_select` = ".$auto_select.",
+				`tax_rate` = ".$tax_rate.",
+				`maxquantity` =  ".$maxquantity.",
+				`published` =  ".$published.",
+				`property_uid` = ".$property_uid.",
+				`validfrom` = '".$validfrom." 00:00:00' ,
+				`validto` = '".$validto." 00:00:00', 
+				`include_in_property_lists` = ".$include_in_property_lists.",
+				`limited_to_room_type` = ".$limited_to_room_type."
+				
+				WHERE uid = ".$extra_id;
+
+			doInsertSql($query);
+
+			$query = "UPDATE #__jomcomp_extrasmodels_models SET 
+				`model` = ".$model_model." ,
+				`params` = ".$model_params.",
+				`force` = ".$model_force."
+				WHERE `extra_id` = ".$extra_id;
+
+			doInsertSql($query);
+			$uid = $extra_id;
+		}
+
 	$webhook_notification								= new stdClass();
 	$webhook_notification->webhook_event				= 'extra_saved';
 	$webhook_notification->webhook_event_description	= 'Logs when optional extras added/updated.';
