@@ -42,6 +42,7 @@ Flight::route('PUT /cmf/property/guesttype', function()
 	$jrportal_guest_types->is_percentage	= (int)$_PUT['is_percentage'];
 	$jrportal_guest_types->is_child			= (int)$_PUT['is_child'] ;
 	$jrportal_guest_types->posneg			= (int)$_PUT['posneg'];
+	$jrportal_guest_types->order			= (int)$_PUT['order'];
 	$jrportal_guest_types->variance			= (float)$_PUT['variance'];
 	$jrportal_guest_types->property_uid		= $property_uid;
 
