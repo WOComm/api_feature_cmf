@@ -155,6 +155,9 @@ class cmf_utilities
 	
 	public static function cache_read($property_uid  , $general_data = false  )
 	{
+		// Needs to be checked before it's considered ready for action
+		return;
+
 		$hash = 'sha256';
 		$algos = hash_algos();
 		if ( in_array( 'sha512' , $algos ) ) {
@@ -208,6 +211,9 @@ class cmf_utilities
 	
 	public static function cache_write($property_uid , $response_name = '' , $response_contents = ''  , $general_data = false )
 	{
+		// Needs to be checked before it's considered ready for action
+		return;
+
 		$hash = 'sha256';
 		$algos = hash_algos();
 		if ( in_array( 'sha512' , $algos ) ) {
