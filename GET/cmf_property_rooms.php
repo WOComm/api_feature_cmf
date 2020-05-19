@@ -64,18 +64,26 @@ Flight::route('GET /cmf/property/rooms/@id', function( $property_uid )
 				$bang = explode ("," , $room['room_features_uid'] );
 				if (!empty($bang)) {
 					foreach ($bang as $id ) {
-						$room_features[] =$basic_room_details->all_room_features[$id]["feature_description"];
+						if ( isset($basic_room_details->all_room_features[$id])) {
+							$room_features[] = $basic_room_details->all_room_features[$id]["feature_description"];
+						}
 					}
 				}
 			}
-			
+
 			$rooms[]= array (
-				"room_uid" => $room["room_uid"] ,
-				"room_name" => $room["room_name"] , 
-				"room_number" => $room["room_number"] , 
-				"room_type_id" => $room["room_classes_uid"] , 
-				"room_type" => $jomres_room_types->room_types[ $room_type_id ] ["room_class_abbv"] , 
-				"room_features" => $room_features ) ;
+				"room_uid"		=> $room["room_uid"] ,
+				"room_name"		=> $room["room_name"] ,
+				"room_number"	=> $room["room_number"] ,
+				"room_type_id"	=> $room["room_classes_uid"] ,
+				"room_type"		=> $jomres_room_types->room_types[ $room_type_id ] ["room_class_abbv"] ,
+				"room_features"	=> $room_features ,
+				"max_people"	=> $room["max_people"] ,
+				"singleperson_suppliment"	=> $room["singleperson_suppliment"] ,
+				"tagline"	=> $room["tagline"] ,
+				"surcharge"	=> $room["surcharge"] ,
+				"description"	=> $room["description"]
+			) ;
 		}
 	}
 	
