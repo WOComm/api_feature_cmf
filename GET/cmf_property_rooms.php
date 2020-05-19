@@ -69,7 +69,8 @@ Flight::route('GET /cmf/property/rooms/@id', function( $property_uid )
 				}
 			}
 			
-			$rooms[]= array ( 
+			$rooms[]= array (
+				"room_uid" => $room["room_uid"] ,
 				"room_name" => $room["room_name"] , 
 				"room_number" => $room["room_number"] , 
 				"room_type_id" => $room["room_classes_uid"] , 
