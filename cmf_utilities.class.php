@@ -473,10 +473,8 @@ class cmf_utilities
 		// Need to base64 encode/decode this data because it's easy to corrupt serialized data when the allowed data is arbitrary
 		if ( $data != '' && $data != false ) {
 			$decoded = unserialize(base64_decode($data));
-			if ($decoded != false ) {
 				return $decoded;
 			}
-		}
 		
 		return $remote_data;
 	}
