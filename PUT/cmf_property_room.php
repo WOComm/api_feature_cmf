@@ -63,14 +63,8 @@ Flight::route('PUT /cmf/property/room', function()
 	} else {
 		$jrportal_rooms->commit_new_room();
 	}
-
-	$property = cmf_utilities::get_property_object_for_update($property_uid); // This utility will return an instance of jomres_properties, because this class has a method for updating an existing property without going through the UI.
-	unset($property->all_property_uids);
-	unset($property->apikey);
-	unset($property->property_mappinglink);
-	unset($property->property_site_id);
 	
-	Flight::json( $response_name = "response" , $property ); 
+	Flight::json( $response_name = "response" , array( "room_uid" => $jrportal_rooms->room_uid) );
 	});
 	
 	
