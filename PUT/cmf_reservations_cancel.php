@@ -30,7 +30,7 @@ Flight::route('PUT /cmf/reservations/cancel', function()
 	$session_id = jomres_cmsspecific_getsessionid();
 
 	$reservation_ids = json_decode(stripslashes($_PUT['reservation_ids']));
-	
+
 	if ($reservation_ids == false ) {
 		Flight::halt(204, "Invalid reservation data passed");
 	}
@@ -78,7 +78,7 @@ Flight::route('PUT /cmf/reservations/cancel', function()
 				$bkg->note = jr_gettext('_JOMRES_COM_MR_EB_GUEST_CANCELLED', '_JOMRES_COM_MR_EB_GUEST_CANCELLED', false);
 				$cancellationSuccessful = $bkg->cancel_booking();
 				if ( $cancellationSuccessful ) {
-					$cancellation_messages[] = "Canelled booking for property uid ".$reservation->property_uid." with contract id of ".$reservation->local_booking_id." ";
+					$cancellation_messages[] = "Cancelled booking for property uid ".$reservation->property_uid." with contract id of ".$reservation->local_booking_id." ";
 					$query = "DELETE FROM #__jomres_channelmanagement_framework_bookings_xref WHERE id = ".$reservation->id." LIMIT 1";
 					doInsertSql($query);
 				} else {
