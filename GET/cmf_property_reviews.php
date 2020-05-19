@@ -62,10 +62,14 @@ Flight::route('GET /cmf/property/reviews/@id', function( $property_uid )
 				$review_response["reviews"][$property_uid][$rating_id]['review_user_email']				= $reviewer['email'];
 				$review_response["reviews"][$property_uid][$rating_id]['rating']						= $itemReview['rating'];
 				$review_response["reviews"][$property_uid][$rating_id]['submitted']						= $itemReview['rating_date'];
-				$review_response["reviews"][$property_uid][$rating_id]['review_text']					= 
+				$review_response["reviews"][$property_uid][$rating_id]['review_text_combined']					=
 					jr_gettext('_JOMRES_REVIEWS_REVIEWBODY_SAID', '_JOMRES_REVIEWS_REVIEWBODY_SAID', false, false)." ".$itemReview['review_description']." ".
 					jr_gettext('_JOMRES_REVIEWS_PROS', '_JOMRES_REVIEWS_PROS', false, false)." ".$itemReview['pros']." ".
 					jr_gettext('_JOMRES_REVIEWS_CONS', '_JOMRES_REVIEWS_CONS', false, false)." ".$itemReview['cons'];
+
+				$review_response["reviews"][$property_uid][$rating_id]['review_text']					= $itemReview['review_description'];
+				$review_response["reviews"][$property_uid][$rating_id]['pros']							= $itemReview['pros'];
+				$review_response["reviews"][$property_uid][$rating_id]['cons']							= $itemReview['cons'];
 			}
 				
 		}
