@@ -53,7 +53,7 @@ Flight::route('PUT /cmf/property/room', function()
 	$jrportal_rooms->room_number				= getEscaped(jomresGetParam($_PUT, 'room_number', ''));
 	$jrportal_rooms->room_floor					= getEscaped(jomresGetParam($_PUT, 'room_floor', ''));
 	$jrportal_rooms->singleperson_suppliment	= (float) jomresGetParam($_PUT, 'singleperson_suppliment', 0.0);
-	$jrportal_rooms->room_features_uid			= json_decode(jomresGetParam($_PUT, 'features_list', '[]'));
+	$jrportal_rooms->room_features_uid			= '';
 	$jrportal_rooms->tagline					= getEscaped(jomresGetParam($_PUT, 'tagline', ''));
 	$jrportal_rooms->surcharge					= (float) jomresGetParam($_PUT, 'surcharge', 0.0);
 	$jrportal_rooms->description			= jomresGetParam($_PUT, 'description', '');
