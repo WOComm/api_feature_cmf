@@ -33,7 +33,7 @@ Flight::route('GET /cmf/properties/ids', function()
 	$response = array();
 	if (!empty($result)) {
 		foreach ( $result as $r ) {
-			$response[] = array ( "local_property_uid" => $r->property_uid , "remote_property_uid" => $r->remote_property_uid ) ;
+			$response[$r->property_uid] = array ( "local_property_uid" => $r->property_uid , "remote_property_uid" => $r->remote_property_uid ) ;
 		}
 	}
 
@@ -51,7 +51,9 @@ Flight::route('GET /cmf/properties/ids', function()
 		foreach ($thisJRUser->authorisedProperties as $property_uid ) {
 			$mrConfig = getPropertySpecificSettings($property_uid);
 			if ( isset($mrConfig['api_privacy_off']) && $mrConfig['api_privacy_off'] == 1 ) {
-				$response[] = array ( "local_property_uid" => $property_uid , "remote_property_uid" => null ) ;
+				if (!isset( $response[$property_uid]) ) {
+					$response[$property_uid] = array ( "local_property_uid" => $property_uid , "remote_property_uid" => null ) ;
+				}
 			}
 		}
 	}
