@@ -59,6 +59,7 @@ Flight::route('GET /cmf/admin/list/channel/properties/@channel_id', function( $c
 			if ( !isset($property_managers[$channel->cms_user_id])) {
 				$property_managers[$channel->cms_user_id]['username'] = "MANAGER NO LONGER EXISTS";
 			}
+
 			$channel_properties[$id] = array (
 				"id"						=> $channel->id ,
 				"channel_id"				=> $channel->channel_id ,
@@ -66,14 +67,19 @@ Flight::route('GET /cmf/admin/list/channel/properties/@channel_id', function( $c
 				"cms_user_id"				=> $channel->cms_user_id ,
 				"property_uid"				=> $channel->property_uid ,
 				"remote_property_uid"		=> $channel->remote_property_uid,
-				"remote_data"				=> unserialize($channel->remote_data)
+				"remote_data"				=> unserialize(base64_decode($channel->remote_data))
 			);
 		}
 		$current_property_details = jomres_singleton_abstract::getInstance('basic_property_details');
 		$property_names = $current_property_details->get_property_name_multi($property_uids);
 	
 		foreach ($channel_properties as $key=>$val ) {
-			$channel_properties[$key]['property_name'] = $property_names[$key];
+			if (isset($property_names[$key])) {
+				$channel_properties[$key]['property_name'] = $property_names[$key];
+			} else {
+				$channel_properties[$key]['property_name'] = "Property name unknown";
+			}
+
 		}
 	
 	}
