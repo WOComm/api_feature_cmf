@@ -33,13 +33,13 @@ Flight::route('GET /cmf/property/availability/blocks/@property_uid/@start_date/@
 	cmf_utilities::cache_read($property_uid);
 	
 	$property = cmf_utilities::get_property_object_for_update($property_uid); // Information about the property. We will use the number of rooms to determine if the property is fully booked or not
-	
-	$number_of_rooms = 0;
-	if (!empty($property->rooms['local_rooms'])) {
-		$number_of_rooms = count($property->rooms['local_rooms']);
+
+	if ( !isset($property->rooms['local_rooms']) || empty($property->rooms['local_rooms']) ) {
+		Flight::halt(204, "There are no rooms for this property.");
 	}
-	
-	
+
+	$number_of_rooms = count($property->rooms['local_rooms']);
+
 	$bookings = cmf_utilities::get_property_bookings( $property_uid );
 	$organised_by_date = cmf_utilities::organise_bookings_by_date( $bookings );
 	
@@ -54,7 +54,7 @@ Flight::route('GET /cmf/property/availability/blocks/@property_uid/@start_date/@
 		}
 		
 	}
-	
+
 	$blocks = array();
 	foreach ($dates_array as $key=>$date ) {
 		if (isset($date['number_of_bookings'])  && $date['number_of_bookings'] >= $number_of_rooms ){  // Using >= here because it is possible to add rooms via the UI which will not be linked via the xref table, meaning that the real number of rooms, and ergo the real number of bookings, can be greater than the number_of_rooms returned by the getProperty_object_for_update method returns. As far as the channel is concerned, all rooms available to it are booked, therefore the entire property is booked. 

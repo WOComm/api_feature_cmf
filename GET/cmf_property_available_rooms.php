@@ -35,10 +35,11 @@ Flight::route('GET /cmf/property/available/rooms/@property_uid/@start_date/@end_
 	
 	$property = cmf_utilities::get_property_object_for_update($property_uid); // Information about the property. We will use the number of rooms to determine if the property is fully booked or not
 
-	$number_of_rooms = 0;
-	if (!empty($property->rooms['local_rooms'])) {
-		$number_of_rooms = count($property->rooms['local_rooms']);
+	if ( !isset($property->rooms['local_rooms']) || empty($property->rooms['local_rooms']) ) {
+		Flight::halt(204, "There are no rooms for this property.");
 	}
+
+	$number_of_rooms = count($property->rooms['local_rooms']);
 
 	$dates_array = array_keys(cmf_utilities::get_date_ranges( $start_date , $end_date ));
 
