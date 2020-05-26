@@ -33,11 +33,11 @@ Flight::route('DELETE /cmf/admin/channel/@channel_id', function( $channel_id )
 	} 
 	
 	
-	$query = "DELETE FROM #__jomres_channelmanagement_framework_channels WHERE channel_id = ".$channel_id;
+	$query = "DELETE FROM #__jomres_channelmanagement_framework_channels WHERE id = ".$channel_id;
 	doInsertSql($query);
 	
 
 	
-	Flight::json( $response_name = "response" , $channel_properties ); 
+	Flight::json( $response_name = "response" , true );
 	});
 	
