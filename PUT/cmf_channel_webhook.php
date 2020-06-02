@@ -46,7 +46,7 @@ Flight::route('PUT /cmf/channel/webhook', function()
 	$url = '';
  	foreach ($settings_json_decoded as $key=>$val) {
 		if ( $key == 'url' ) {
-			$val = filter_var($val, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED);
+			$val = filter_var($val, FILTER_VALIDATE_URL );
 			$url = $val;
 		} else {
 			$key = filter_var($key, FILTER_SANITIZE_STRING );

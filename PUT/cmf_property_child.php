@@ -30,7 +30,7 @@ Flight::route('PUT /cmf/property/child', function()
 
 	$property_uid						= (int)$_PUT['property_uid'];
 	$remote_property_uid				= (int)$_PUT['remote_property_uid'];
-	$remote__url						= filter_var($_PUT['remote__url'] , FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED);
+	$remote__url						= filter_var($_PUT['remote__url'] , FILTER_VALIDATE_URL);
 	$remote_username					= filter_var($_PUT['remote_username'], FILTER_SANITIZE_SPECIAL_CHARS);
 	$jomres2jomres						= (int)(bool)$_PUT['jomres2jomres'];
 	
@@ -39,10 +39,10 @@ Flight::route('PUT /cmf/property/child', function()
 	$remote_property_api_secret			= '';
 	
 	if ( isset($_PUT['jomres2jomres'])) {
-		$jomres2jomres						= filter_var($_PUT['jomres2jomres'] , FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED);
+		$jomres2jomres						= filter_var($_PUT['jomres2jomres'] , FILTER_VALIDATE_URL );
 	}
 	if ( isset($_PUT['remote_property_api_url'])) {
-		$remote_property_api_url			= filter_var($_PUT['remote_property_api_url'] , FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED);
+		$remote_property_api_url			= filter_var($_PUT['remote_property_api_url'] , FILTER_VALIDATE_URL);
 	}
 	if ( isset($_PUT['remote_property_api_client'])) {
 		$remote_property_api_client			= filter_var($_PUT['remote_property_api_client'], FILTER_SANITIZE_SPECIAL_CHARS);

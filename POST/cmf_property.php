@@ -92,7 +92,7 @@ Flight::route('POST /cmf/property', function()
 			"method"=>"PUT",
 			"request"=>"cmf/property/settings",
 			"data"=>array ("property_uid" => $jomres_properties->propertys_uid , "params" => json_encode($settings)),
-			"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+			"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 		);
 
 		$call_self = new call_self( );

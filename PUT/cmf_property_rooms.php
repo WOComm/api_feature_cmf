@@ -55,19 +55,18 @@ Flight::route('PUT /cmf/property/rooms', function()
 
 		cmf_utilities::modify_property_rooms( $property_uid , $room_type);
 		
-		// Now query the rooms table for rooms of the type(s) and store that information in the xref table
-		
-		
-		
-		$query = "SELECT room_uid FROM #__jomres_rooms WHERE `propertys_uid` = ".$property_uid." AND `room_classes_uid` = ".$room_type->amenity->jomres_id ;
+		// Now query the rooms table for rooms and store that information in the xref table
+
+		$query = "SELECT room_uid , room_classes_uid , max_people FROM #__jomres_rooms WHERE `propertys_uid` = ".$property_uid;
 		$property_rooms = doSelectSql($query);
 
-		$params = array( "local_rooms" => $property_rooms , "amenity" => $room_type );
-		
+		$params = array( "local_rooms" => $property_rooms );
+
 		$query = "SELECT id FROM #__jomres_channelmanagement_framework_rooms_xref WHERE `property_uid` = ".$property_uid." AND `channel_id` = ".Flight::get('channel_id');
 		$existing = doSelectSql( $query );
 
 		if (empty($existing)) {
+
 			$query = "INSERT INTO #__jomres_channelmanagement_framework_rooms_xref 
 				(
 				`channel_id`,
@@ -89,9 +88,8 @@ Flight::route('PUT /cmf/property/rooms', function()
 				AND
 					`property_uid` = ".$property_uid."
 				";
-				echo $query;
-		}
 
+		}
 		doInsertSql($query);
 	}
 

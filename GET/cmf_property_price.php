@@ -37,7 +37,7 @@ Flight::route('GET /cmf/property/price/@property_uid/@start_date/@end_date/@numb
 		"method"=>"GET",
 		"request"=>"cmf/property/availability/blocks/".$property_uid."/".$start_date."/".$end_date,
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 		);
 	
 	$blocks = json_decode(stripslashes($call_self->call($elements)));
@@ -55,7 +55,7 @@ Flight::route('GET /cmf/property/price/@property_uid/@start_date/@end_date/@numb
 		"method"=>"GET",
 		"request"=>"cmf/property/list/prices/".$property_uid,
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 		);
 	
 	$prices = json_decode(stripslashes($call_self->call($elements)));
@@ -68,7 +68,7 @@ Flight::route('GET /cmf/property/price/@property_uid/@start_date/@end_date/@numb
 		"method"=>"GET",
 		"request"=>"cmf/property/list/tariff/types/dates/".$property_uid,
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 		);
 	
 	$tariff_type_dates = json_decode(stripslashes($call_self->call($elements)));

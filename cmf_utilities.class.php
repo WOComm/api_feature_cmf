@@ -64,11 +64,11 @@ class cmf_utilities
 			Flight::halt(204, "Channel not set");
 		}
 
-		if ( isset($all_headers['X-JOMRES-PROXY_ID']) && (int)$all_headers['X-JOMRES-PROXY_ID'] > 0 ) {  // Only the "system" OAuth client can send proxy ids. "system" is used by plugins in Jomres to call the cmf rest api functionality, however when working on properties, we need to actually hand over the real property manager's cms id. In essence, the "system" client is only used to get valid tokens and to call the endpoint, from that point onwards, the manager's id is used.
+		if ( isset($all_headers['X-JOMRES-PROXY-ID']) && (int)$all_headers['X-JOMRES-PROXY-ID'] > 0 ) {  // Only the "system" OAuth client can send proxy ids. "system" is used by plugins in Jomres to call the cmf rest api functionality, however when working on properties, we need to actually hand over the real property manager's cms id. In essence, the "system" client is only used to get valid tokens and to call the endpoint, from that point onwards, the manager's id is used.
 			if ( Flight::get('scopes') == array("*") ) {
-				Flight::set('user_id' , (int)$all_headers['X-JOMRES-PROXY_ID'] );
+				Flight::set('user_id' , (int)$all_headers['X-JOMRES-PROXY-ID'] );
 				$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
-				$thisJRUser->init_user( (int)$all_headers['X-JOMRES-PROXY_ID'] );
+				$thisJRUser->init_user( (int)$all_headers['X-JOMRES-PROXY-ID'] );
 			} else {
 				Flight::halt(204, "You cannot use proxy ids.");
 			}
@@ -358,7 +358,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/cleaningfee/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 				);
 			
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -374,7 +374,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/securitydeposit/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 				);
 			
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -668,7 +668,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/securitydeposit/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 				);
 			
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -691,7 +691,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/cleaningfee/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 				);
 					
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -713,7 +713,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/property/deposit/type/".$property_uid,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 				);
 			
 			$response = json_decode(stripslashes($call_self->call($elements)));
@@ -789,7 +789,7 @@ class cmf_utilities
 				"method"=>"GET",
 				"request"=>"cmf/list/booking/statuses/",
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 				);
 			
 			$booking_statuses = json_decode(stripslashes($call_self->call($elements)));
@@ -1110,7 +1110,7 @@ class cmf_utilities
 			"method"=>"GET",
 			"request"=>"cmf/property/available/rooms/".$booking->property_uid."/".$booking->date_from."/".$booking->date_to,
 			"data"=>array(),
-			"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') ),
+			"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') ),
 
 			);
 				
@@ -1194,7 +1194,7 @@ class cmf_utilities
 								"remote_booking_id" => $booking->remote_reservation_id,
 								"local_booking_id" => $contract_uid
 								),
-							"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+							"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 							);
 
 						$link_response = json_decode(stripslashes($call_self->call($elements)));

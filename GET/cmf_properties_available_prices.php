@@ -50,7 +50,7 @@ Flight::route('GET /cmf/properties/available/prices/@start_date/@end_date/@numbe
 				"method"=>"GET",
 				"request"=>"cmf/property/availability/blocks/".$property_uid."/".$start_date."/".$end_date,
 				"data"=>array(),
-				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+				"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 				);
 			
 			$blocks = json_decode(stripslashes($call_self->call($elements)));
@@ -68,7 +68,7 @@ Flight::route('GET /cmf/properties/available/prices/@start_date/@end_date/@numbe
 					"method"=>"GET",
 					"request"=>"cmf/property/price/".$property_uid."/".$start_date."/".$end_date."/".$number_of_people,
 					"data"=>array(),
-					"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+					"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 					);
 				$prices_response = json_decode(stripslashes($call_self->call($elements)));
 				

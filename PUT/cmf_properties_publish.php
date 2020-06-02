@@ -33,7 +33,7 @@ Flight::route('PUT /cmf/properties/publish', function()
 		"method"=>"GET",
 		"request"=>"cmf/properties/statuses",
 		"data"=>array(),
-		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy_id: ".Flight::get('user_id') )
+		"headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
 		);
 	
 	$properties_statuses = json_decode(stripslashes($call_self->call($elements)));

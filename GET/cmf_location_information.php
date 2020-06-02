@@ -32,8 +32,10 @@ Flight::route('GET /cmf/location/information/@lat/@long', function($lat , $long 
 
 	cmf_utilities::cache_read($lat.'_'.$long , $general_data = true );
 
+
 	$siteConfig = jomres_singleton_abstract::getInstance('jomres_config_site_singleton');
 	$jrConfig = $siteConfig->get();
+
 
 	try {
 		$client = new GuzzleHttp\Client();
@@ -46,6 +48,7 @@ Flight::route('GET /cmf/location/information/@lat/@long', function($lat , $long 
 		catch (GuzzleHttp\Exception\RequestException $e) {
 			var_dump($e->getMessage());exit;
 			}
+
 		$reply = new stdClass();
 
 		if (isset($data->data->response->country_code)) {

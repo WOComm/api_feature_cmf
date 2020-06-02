@@ -34,10 +34,10 @@ Flight::route('POST /cmf/channel/announce/@channel_name/@friendly_name', functio
 		// Most calls will come from the channel management framework working on behalf of a user, we can tell if this is happening because the calling user with the * scope passes a proxy id. If it's set we'll initialise that user and work as them for the purpose of security
 		// Sometimes however "system" will want to work as itself, which we will allow
 
-		if ( isset($all_headers['X-JOMRES-proxy_id']) && (int)$all_headers['X-JOMRES-proxy_id'] > 0 ) {
-			Flight::set('user_id' , (int)$all_headers['X-JOMRES-proxy_id'] );
+		if ( isset($all_headers['X-JOMRES-proxy-id']) && (int)$all_headers['X-JOMRES-proxy-id'] > 0 ) {
+			Flight::set('user_id' , (int)$all_headers['X-JOMRES-proxy-id'] );
 			$thisJRUser = jomres_singleton_abstract::getInstance('jr_user');
-			$thisJRUser->init_user( (int)$all_headers['X-JOMRES-proxy_id'] );
+			$thisJRUser->init_user( (int)$all_headers['X-JOMRES-proxy-id'] );
 		}
 
 	}

@@ -53,7 +53,7 @@ Flight::route('PUT /cmf/reservations/add', function()
 		"data"=>array(),
 		"headers" => array (
 			Flight::get('channel_header' ).": ".Flight::get('channel_name'),
-			"X-JOMRES-proxy_id: ".Flight::get('user_id')
+			"X-JOMRES-proxy-id: ".Flight::get('user_id')
 			)
 		);
 
