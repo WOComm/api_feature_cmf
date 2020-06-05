@@ -37,7 +37,7 @@ Flight::route('GET /cmf/properties/change/logs/', function()
 
 	$response = json_decode(stripslashes($call_self->call($elements)));
 
-	if ( !isset($response->data->response) || !is_array($response->data->response) || empty($response->data->response) ) {
+	if ( !isset($response->data->response) ) {
 		Flight::halt(204, "Cannot get manager's properties" );
 	}
 
@@ -45,8 +45,6 @@ Flight::route('GET /cmf/properties/change/logs/', function()
 	foreach ($response->data->response as $property ) {
 		$property_ids[] = $property->local_property_uid;
 	}
-
-
 
 	$query = 'SELECT id , property_uid , user_performing_action , channel_data , date_added , webhook_event_title ,webhook_event FROM #__jomres_webhook_events WHERE 
 		property_uid IN ('.jomres_implode($property_ids).') 
