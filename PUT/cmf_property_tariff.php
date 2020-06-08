@@ -84,24 +84,84 @@ Flight::route('PUT /cmf/property/tariff/', function()
 
     jr_import('jrportal_rates');
 	$jrportal_rates = new jrportal_rates();
-	$jrportal_rates->property_uid = $property_uid;
-
+	$jrportal_rates->property_uid 				= $property_uid;
 	$jrportal_rates->tarifftype_id  			= (int)jomresGetParam( $_PUT, 'tarifftypeid', 0 );
-	$jrportal_rates->rate_title 				= jomresGetParam( $_PUT, 'rate_title', $jrportal_rates->rates_defaults['rate_title'] );
-	$jrportal_rates->rate_description 			= jomresGetParam( $_PUT, 'rate_description', $jrportal_rates->rates_defaults['rate_description'] );
-	$jrportal_rates->maxdays 					= (int)jomresGetParam( $_PUT, 'maxdays', $jrportal_rates->rates_defaults['maxdays'] );
-	$jrportal_rates->minpeople 					= (int)jomresGetParam( $_PUT, 'minpeople', $jrportal_rates->rates_defaults['minpeople'] );
-	$jrportal_rates->maxpeople 					= (int)jomresGetParam( $_PUT, 'maxpeople', $jrportal_rates->rates_defaults['maxpeople'] );
-	$jrportal_rates->roomclass_uid 				= (int)jomresGetParam( $_PUT, 'roomclass_uid', $jrportal_rates->rates_defaults['roomclass_uid'] );
-	$jrportal_rates->dayofweek 					= (int)jomresGetParam( $_PUT, 'dayofweek', $jrportal_rates->rates_defaults['dayofweek'] );
-	$jrportal_rates->ignore_pppn 				= (int)jomresGetParam( $_PUT, 'ignore_pppn', $jrportal_rates->rates_defaults['ignore_pppn'] );
-	$jrportal_rates->allow_we 					= (int)jomresGetParam( $_PUT, 'allow_we', $jrportal_rates->rates_defaults['allow_we'] );
-	$jrportal_rates->weekendonly 				= (int)jomresGetParam( $_PUT, 'weekendonly', $jrportal_rates->rates_defaults['weekendonly'] );
-	$jrportal_rates->minrooms_alreadyselected 	= (int)jomresGetParam( $_PUT, 'minrooms_alreadyselected', $jrportal_rates->rates_defaults['minrooms_alreadyselected'] );
-	$jrportal_rates->maxrooms_alreadyselected 	= (int)jomresGetParam( $_PUT, 'maxrooms_alreadyselected', $jrportal_rates->rates_defaults['maxrooms_alreadyselected'] );
+	$jrportal_rates->roomclass_uid 				= (int)jomresGetParam( $_PUT, 'roomclass_uid', 	$jrportal_rates->rates_defaults['roomclass_uid'] );
 
 	$jrportal_rates->dates_rates				= $_PUT['tariffinput'];
 	$jrportal_rates->dates_mindays				= $_PUT['mindaysinput'];
+
+	if ($jrportal_rates->tarifftype_id > 0 ) {
+		$jrportal_rates->get_rate();
+	}
+
+	if ($jrportal_rates->tarifftype_id > 0 ) { // If tariff type id is set, when we get_rate the jrportal_rates class will throw an exception if the tariff type doesn't exist so we can trust that we are working on a valid tariff type here
+
+		reset($jrportal_rates->rates[$jrportal_rates->tarifftype_id]);
+		$first_key = key($jrportal_rates->rates[$jrportal_rates->tarifftype_id]);
+
+		$jrportal_rates->rate_title					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['rate_title'];
+		$jrportal_rates->rate_description			= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['rate_description'];
+		$jrportal_rates->maxdays					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['maxdays'];
+		$jrportal_rates->minpeople					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['minpeople'];
+		$jrportal_rates->dayofweek					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['dayofweek'];
+		$jrportal_rates->ignore_pppn				= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['ignore_pppn'];
+		$jrportal_rates->allow_we					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['allow_we'];
+		$jrportal_rates->weekendonly				= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['weekendonly'];
+		$jrportal_rates->minrooms_alreadyselected	= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['minrooms_alreadyselected'];
+		$jrportal_rates->maxrooms_alreadyselected	= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['maxrooms_alreadyselected'];
+
+		if ( isset($_PUT['rate_title'])) {
+			$jrportal_rates->rate_title 				= jomresGetParam( $_PUT, 'rate_title', $jrportal_rates->rates_defaults['rate_title'] );
+		}
+		if ( isset($_PUT['rate_description'])) {
+			$jrportal_rates->rate_description 			= jomresGetParam( $_PUT, 'rate_description', $jrportal_rates->rates_defaults['rate_description'] );
+		}
+		if ( isset($_PUT['maxdays'])) {
+			$jrportal_rates->maxdays 					= (int)jomresGetParam( $_PUT, 'maxdays', $jrportal_rates->rates_defaults['maxdays'] );
+		}
+		if ( isset($_PUT['minpeople'])) {
+			$jrportal_rates->minpeople 					= (int)jomresGetParam( $_PUT, 'minpeople', $jrportal_rates->rates_defaults['minpeople'] );
+		}
+		if ( isset($_PUT['maxpeople'])) {
+			$jrportal_rates->maxpeople 					= (int)jomresGetParam( $_PUT, 'maxpeople', $jrportal_rates->rates_defaults['maxpeople'] );
+		}
+		if ( isset($_PUT['dayofweek'])) {
+			$jrportal_rates->dayofweek 					= (int)jomresGetParam( $_PUT, 'dayofweek', $jrportal_rates->rates_defaults['dayofweek'] );
+		}
+		if ( isset($_PUT['ignore_pppn'])) {
+			$jrportal_rates->ignore_pppn 				= (int)jomresGetParam( $_PUT, 'ignore_pppn', $jrportal_rates->rates_defaults['ignore_pppn'] );
+		}
+		if ( isset($_PUT['allow_we'])) {
+			$jrportal_rates->allow_we 					= (int)jomresGetParam( $_PUT, 'allow_we', $jrportal_rates->rates_defaults['allow_we'] );
+		}
+		if ( isset($_PUT['weekendonly'])) {
+			$jrportal_rates->weekendonly 				= (int)jomresGetParam( $_PUT, 'weekendonly', $jrportal_rates->rates_defaults['weekendonly'] );
+		}
+		if ( isset($_PUT['minrooms_alreadyselected'])) {
+			$jrportal_rates->minrooms_alreadyselected 	= (int)jomresGetParam( $_PUT, 'minrooms_alreadyselected', $jrportal_rates->rates_defaults['minrooms_alreadyselected'] );
+		}
+		if ( isset($_PUT['maxrooms_alreadyselected'])) {
+			$jrportal_rates->maxrooms_alreadyselected 	= (int)jomresGetParam( $_PUT, 'maxrooms_alreadyselected', $jrportal_rates->rates_defaults['maxrooms_alreadyselected'] );
+		}
+
+	} else {
+		$jrportal_rates->rate_title 				= jomresGetParam( $_PUT, 'rate_title', $jrportal_rates->rates_defaults['rate_title'] );
+		$jrportal_rates->rate_description 			= jomresGetParam( $_PUT, 'rate_description', $jrportal_rates->rates_defaults['rate_description'] );
+		$jrportal_rates->maxdays 					= (int)jomresGetParam( $_PUT, 'maxdays', $jrportal_rates->rates_defaults['maxdays'] );
+		$jrportal_rates->minpeople 					= (int)jomresGetParam( $_PUT, 'minpeople', $jrportal_rates->rates_defaults['minpeople'] );
+		$jrportal_rates->maxpeople 					= (int)jomresGetParam( $_PUT, 'maxpeople', $jrportal_rates->rates_defaults['maxpeople'] );
+		$jrportal_rates->roomclass_uid 				= (int)jomresGetParam( $_PUT, 'roomclass_uid', $jrportal_rates->rates_defaults['roomclass_uid'] );
+		$jrportal_rates->dayofweek 					= (int)jomresGetParam( $_PUT, 'dayofweek', $jrportal_rates->rates_defaults['dayofweek'] );
+		$jrportal_rates->ignore_pppn 				= (int)jomresGetParam( $_PUT, 'ignore_pppn', $jrportal_rates->rates_defaults['ignore_pppn'] );
+		$jrportal_rates->allow_we 					= (int)jomresGetParam( $_PUT, 'allow_we', $jrportal_rates->rates_defaults['allow_we'] );
+		$jrportal_rates->weekendonly 				= (int)jomresGetParam( $_PUT, 'weekendonly', $jrportal_rates->rates_defaults['weekendonly'] );
+		$jrportal_rates->minrooms_alreadyselected 	= (int)jomresGetParam( $_PUT, 'minrooms_alreadyselected', $jrportal_rates->rates_defaults['minrooms_alreadyselected'] );
+		$jrportal_rates->maxrooms_alreadyselected 	= (int)jomresGetParam( $_PUT, 'maxrooms_alreadyselected', $jrportal_rates->rates_defaults['maxrooms_alreadyselected'] );
+
+	}
+	// tariff type id, property id, room class id, prices and min days
+
 
 	$jrportal_rates->save_rate();
 
