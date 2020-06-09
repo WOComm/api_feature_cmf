@@ -48,7 +48,6 @@ Flight::route('GET /cmf/property/change/log/@property_uid', function( $property_
 				"property_uid" => $event->property_uid,
 				"user_id" => $event->user_performing_action,
 				"action" => $event->webhook_event_title,
-				"unique_id" => $event->unique_id,
 				"date" => $event->date_added,
 				"user_id" => $event->user_performing_action,
 				"webhook_event" => unserialize($event->webhook_event),
