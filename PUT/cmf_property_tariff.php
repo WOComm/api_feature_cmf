@@ -104,6 +104,7 @@ Flight::route('PUT /cmf/property/tariff/', function()
 		$jrportal_rates->rate_description			= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['rate_description'];
 		$jrportal_rates->maxdays					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['maxdays'];
 		$jrportal_rates->minpeople					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['minpeople'];
+		$jrportal_rates->maxpeople					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['maxpeople'];
 		$jrportal_rates->dayofweek					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['dayofweek'];
 		$jrportal_rates->ignore_pppn				= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['ignore_pppn'];
 		$jrportal_rates->allow_we					= $jrportal_rates->rates[$jrportal_rates->tarifftype_id][$first_key]['allow_we'];
