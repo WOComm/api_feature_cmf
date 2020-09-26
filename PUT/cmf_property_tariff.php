@@ -91,10 +91,6 @@ Flight::route('PUT /cmf/property/tariff/', function()
 	$jrportal_rates->dates_rates				= $_PUT['tariffinput'];
 	$jrportal_rates->dates_mindays				= $_PUT['mindaysinput'];
 
-	if ($jrportal_rates->tarifftype_id > 0 ) {
-		$jrportal_rates->get_rate();
-	}
-
 	if ($jrportal_rates->tarifftype_id > 0 ) { // If tariff type id is set, when we get_rate the jrportal_rates class will throw an exception if the tariff type doesn't exist so we can trust that we are working on a valid tariff type here
 
 		reset($jrportal_rates->rates[$jrportal_rates->tarifftype_id]);
@@ -163,7 +159,7 @@ Flight::route('PUT /cmf/property/tariff/', function()
 	}
 	// tariff type id, property id, room class id, prices and min days
 
-
+//var_dump(json_encode($jrportal_rates));exit;
 	$jrportal_rates->save_rate();
 
 	Flight::json( $response_name = "response" ,$jrportal_rates->tarifftype_id);
