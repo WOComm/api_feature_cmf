@@ -31,6 +31,11 @@ Flight::route('PUT /cmf/property/blackbooking', function()
 	$dates_unavailable		= json_decode(stripslashes($_PUT['availability']));
 	$room_ids				= json_decode(stripslashes($_PUT['room_ids']));
 	$remote_booking_id		= filter_var( $_PUT['remote_booking_id'] , FILTER_SANITIZE_SPECIAL_CHARS );
+	if (isset($_PUT['text'])) {
+        $text   				= filter_var( $_PUT['text'], FILTER_SANITIZE_SPECIAL_CHARS); // This can be used for any textual content
+    } else {
+	    $text = '';
+    }
 
 	cmf_utilities::validate_property_uid_for_user($property_uid);
 	
@@ -78,7 +83,7 @@ Flight::route('PUT /cmf/property/blackbooking', function()
 	$bkg->arrival				= date( "Y/m/d" , strtotime($dates_unavailable->date_from));
 	$bkg->departure				= date( "Y/m/d" , strtotime($dates_unavailable->date_to." +1 day"));
 	$bkg->room_uids				= $rooms_to_block;
-	$bkg->special_reqs			= '';
+	$bkg->special_reqs			= $text ;
 	$bkg->booking_number		= $remote_booking_id;
 
 	if ( $bkg->create_black_booking() ) {
