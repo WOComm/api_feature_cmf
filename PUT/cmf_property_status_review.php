@@ -29,9 +29,9 @@ Flight::route('PUT /cmf/property/status/review', function()
 	cmf_utilities::validate_channel_for_user();  // If the user and channel name do not correspond, then this channel is incorrect and can go no further, it'll throw a 204 error
 
 	$property_uid			= (int)$_PUT['property_uid'];
-	
-	cmf_utilities::validate_property_uid_for_user($property_uid);
-	
+
+    cmf_utilities::validate_property_uid_for_user($property_uid);
+
 	jr_import('jomres_sanity_check');
 	$jomres_sanity_check = new jomres_sanity_check( true , $property_uid );
 	$jomres_sanity_check->do_sanity_checks( true );

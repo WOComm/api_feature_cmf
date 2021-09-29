@@ -37,8 +37,23 @@ Flight::route('GET /cmf/property/@id', function( $property_uid )
 	unset($property->property_mappinglink);
 	unset($property->property_site_id);
 
-	
+	// We will respond with a count of changelog items. If they don't exist then this property cannot be imported into a remove jomres2jomres site
+    $call_self = new call_self( );
+    $elements = array(
+       "method"=>"GET",
+       "request"=>'cmf/property/change/log/'.$property_uid,
+       "data"=>array(),
+       "headers" => array ( Flight::get('channel_header' ).": ".Flight::get('channel_name') , "X-JOMRES-proxy-id: ".Flight::get('user_id') )
+    );
+
+    $existing_changelog_items = json_decode(stripslashes($call_self->call($elements)));
+
+    $changelog_item_count = 0;
+    if (isset($existing_changelog_items->data->response) && is_array($existing_changelog_items->data->response) ) {
+        $changelog_item_count = count($existing_changelog_items->data->response);
+    }
+
+    $property->changelog_item_count = $changelog_item_count;
+
 	Flight::json( $response_name = "response" , $property ); 
 	});
-	
-	

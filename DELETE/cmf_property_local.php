@@ -44,6 +44,7 @@ Flight::route('DELETE /cmf/property/local/@id', function($property_uid)
 		}
 
 		$query = "DELETE FROM #__jomres_channelmanagement_framework_property_uid_xref WHERE `cms_user_id` = ".(int)Flight::get('user_id')." AND `channel_id` = ".(int) Flight::get('channel_id')." AND `property_uid` = ".(int) $property_uid;
+
 		$success = doInsertSql($query);
 
 		if ($success >  0) {

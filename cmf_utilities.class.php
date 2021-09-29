@@ -117,9 +117,10 @@ class cmf_utilities
 
 		if ( !$api_privacy_off ) {
 			$query = "SELECT id FROM `#__jomres_channelmanagement_framework_property_uid_xref` WHERE `property_uid` = ".$property_uid." AND `channel_id` =  ".Flight::get('channel_id')." AND `cms_user_id` = ".(int)Flight::get('user_id') ;
+		//	echo $query;exit;
 			$result = doSelectSql($query);
 			if (empty($result)) {
-				Flight::halt(204, "Manager does not have access to this property, or the property does not exist.");
+				Flight::halt(204, "Manager ".(int)Flight::get('user_id')." does not have access to property ".$property_uid." on channel ".Flight::get('channel_id')." , or the property does not exist.");
 			}
 		} else {
 			cmf_utilities::validate_property_is_in_managers_authorised_properties_list($property_uid);
